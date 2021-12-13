@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.Domain
 {
-    class Profile
+    public class Profile
     {
         public User User { get; set; }
         public Note? Bio { get; set; }

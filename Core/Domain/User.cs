@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Core.Domain
 {
-    class User
+    public class User
     {
         [Key]
         public int Uid { get; set; }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.Domain
 {
-    class Photo
+    public class Photo
     {
         public int Id { get; set; }
         public User Owner { get; set; }

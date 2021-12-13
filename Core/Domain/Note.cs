@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.Domain
 {
-    class Note
+    public class Note
     {
     }
 }
