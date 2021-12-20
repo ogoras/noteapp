@@ -14,6 +14,7 @@ namespace Core.Domain
         public String Password { get; set; } //The user password and hash
         public DateTime DateCreated { get; set; }
         public Login? LastLogin { get; set; }
+        public int? LastLoginId { get; set; }
         public List<Login>? UserLogins { get; set; }
         public Profile? Profile { get; set; }
     }
