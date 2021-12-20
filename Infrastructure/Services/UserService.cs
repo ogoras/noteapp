@@ -20,6 +20,8 @@ namespace Infrastructure.Services
         }
         public async Task Create(UserDTO u)
         {
+            if (await _userRepository.ReadAsync(u.Username) != null)
+                throw new ArgumentException("User already exists");
             User user = new User
             {
                 Username = u.Username,

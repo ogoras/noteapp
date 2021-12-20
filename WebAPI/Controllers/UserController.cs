@@ -38,8 +38,20 @@ namespace WebAPI.Controllers
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] UserDTO user)
         {
+            if (user.Username==null||user.Email==null||user.Password==null)
+                return BadRequest();
+            try
+            {
+                await _userService.Create(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
         }
 
         // PUT api/<UserController>/5
