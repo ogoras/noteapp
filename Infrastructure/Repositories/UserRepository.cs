@@ -30,7 +30,7 @@ namespace Infrastructure.Repositories
 
         public async Task UpdateAsync(User u)
         {
-            throw new NotImplementedException();
+            await base.UpdateAsync(u, x => x.Uid == u.Uid);
         }
     }
 }

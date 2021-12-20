@@ -17,6 +17,7 @@ namespace Core.Domain
         public int? LastLoginId { get; set; }
         public List<Login>? UserLogins { get; set; }
         public Profile? Profile { get; set; }
+        public int? ProfileId { get; set; }
 
         public void updateValues(User u)
         {
