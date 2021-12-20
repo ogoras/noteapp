@@ -13,8 +13,8 @@ namespace Core.Domain
         public String Email { get; set; }
         public String Password { get; set; } //The user password and hash
         public DateTime DateCreated { get; set; }
-        public UserLogin? LastLogin { get; set; }
-        public List<UserLogin> UserLogins { get; set; }
-        public Profile Profile { get; set; }
+        public Login? LastLogin { get; set; }
+        public List<Login>? UserLogins { get; set; }
+        public Profile? Profile { get; set; }
     }
 }
