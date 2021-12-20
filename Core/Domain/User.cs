@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Core.Domain
 {
-    public class User
+    public class User : IUpdateable<User>
     {
         [Key]
         public int Uid { get; set; }
@@ -17,5 +17,16 @@ namespace Core.Domain
         public int? LastLoginId { get; set; }
         public List<Login>? UserLogins { get; set; }
         public Profile? Profile { get; set; }
+
+        public void updateValues(User u)
+        {
+            Username = u.Username;
+            Email = u.Email;
+            Password = u.Password;
+            LastLogin = u.LastLogin ?? LastLogin;
+            LastLoginId = u.LastLoginId ?? LastLoginId;
+            UserLogins = u.UserLogins ?? UserLogins;
+            Profile = u.Profile ?? Profile;
+        }
     }
 }

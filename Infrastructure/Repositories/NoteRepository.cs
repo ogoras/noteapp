@@ -1,60 +1,61 @@
 ﻿using Core.Domain;
 using Core.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    class NoteRepository : INoteRepository
+    public class NoteRepository : Repository<Note>, INoteRepository
     {
-        public Task CreateAsync(Note n)
+        public NoteRepository(AppDbContext appDbContext) : base(appDbContext)
+        {
+            dbSet = appDbContext.Notes;
+        }
+        public async Task DelAsync(Note n)
+        {
+            await base.DelAsync(n, x => x.Id == n.Id);
+        }
+
+        public async Task<IEnumerable<Note>> ReadAllAsync(int uid)
+        {
+            return await base.ReadAllAsync(dbSet.Include(note => note.Owner)
+                .ThenInclude(profile => profile.User),
+                x => x.Owner.User.Uid == uid);
+        }
+
+        public async Task<IEnumerable<Note>> ReadAllEncryptedAsync(int uid)
         {
             throw new NotImplementedException();
         }
 
-        public Task DelAsync(Note n)
+        public async Task<IEnumerable<Note>> ReadAllSharedByAsync(int uid)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Note>> ReadAllAsync()
+        public async Task<IEnumerable<Note>> ReadAllSharedToAsync(int uid)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Note>> ReadAllAsync(int uid)
+        public async Task<Note> ReadAsync(int id)
         {
-            throw new NotImplementedException();
+            return await base.ReadAsync(x => x.Id == id);
         }
 
-        public Task<IEnumerable<Note>> ReadAllEncryptedAsync(int uid)
+        public async Task<Note> ReadDetailsAsync(int id)
         {
-            throw new NotImplementedException();
+            return await base.ReadAsync(dbSet.Include(note => note.Owner)
+                .Include(note => note.AttachedPhotos)
+                .Include(note => note.ShareRecipients),
+                x => x.Id == id);
         }
 
-        public Task<IEnumerable<Note>> ReadAllSharedByAsync(int uid)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Note>> ReadAllSharedToAsync(int uid)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Note> ReadAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Note> ReadDetailsAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(Note n)
+        public async Task UpdateAsync(Note n)
         {
             throw new NotImplementedException();
         }

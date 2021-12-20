@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Repositories
 {
-    interface IProfileRepository
+    public interface IProfileRepository
     {
         Task CreateAsync(Profile p);
         Task<Profile> ReadAsync(int uid);

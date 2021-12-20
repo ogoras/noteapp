@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Core.Repositories
 {
-    interface IUserRepository
+    public interface IUserRepository
     {
         Task CreateAsync(User u);
         Task<User> ReadAsync(int id);
+        Task<User> ReadAsync(String username);
         Task UpdateAsync(User u);
         Task DeleteAsync(User u);
         Task<IEnumerable<User>> ReadAllAsync();
