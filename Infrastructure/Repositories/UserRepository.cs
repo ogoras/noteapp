@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
 
         public async Task<User> ReadAsync(int id)
         {
-            throw new NotImplementedException();
+            return await base.ReadAsync(u => u.Uid == id);
         }
 
         public async Task<User> ReadAsync(string username)

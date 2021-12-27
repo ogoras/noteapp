@@ -9,8 +9,8 @@ namespace Infrastructure.Services
     public interface IUserService
     {
         Task Create(UserDTO u);
-        Task<IEnumerable<UserDTO>> ReadAll();
+        Task<IEnumerable<UserDTOwithID>> ReadAll();
         Task<UserDTO> Read(string username);
-        Task Update(UserDTO user);
+        Task Update(int id, UserDTO user);
     }
 }

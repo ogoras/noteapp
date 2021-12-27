@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<UserDTO> users = await _userService.ReadAll();
+            IEnumerable<UserDTOwithID> users = await _userService.ReadAll();
             return Json(users);
         }
 
@@ -62,9 +62,9 @@ namespace WebAPI.Controllers
                 return BadRequest();
             try
             {
-                await _userService.Update(user);
+                await _userService.Update(id, user);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }

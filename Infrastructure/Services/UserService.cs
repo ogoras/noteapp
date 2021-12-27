@@ -45,11 +45,11 @@ namespace Infrastructure.Services
             await _userRepository.UpdateAsync(user);
         }
 
-        public async Task<IEnumerable<UserDTO>> ReadAll()
+        public async Task<IEnumerable<UserDTOwithID>> ReadAll()
         {
             var users = await _userRepository.ReadAllAsync();
 
-            return users.Select(x => new UserDTO(x));
+            return users.Select(x => new UserDTOwithID(x));
         }
 
         public async Task<UserDTO?> Read(string username)
@@ -64,9 +64,21 @@ namespace Infrastructure.Services
             return password;
         }
 
-        public Task Update(UserDTO user)
+        public async Task Update(int id, UserDTO user)
         {
-            throw new NotImplementedException();
+            User original = await _userRepository.ReadAsync(id);
+            User u = await _userRepository.ReadAsync(user.Username);
+            if (u != null && u != original)
+                throw new ArgumentException("A user with the username " + user.Username + " already exists!");
+            User updated = new User()
+            {
+                Uid = id,
+                Username = user.Username ?? original.Username,
+                Email = user.Email ?? original.Email,
+                Password = user.Password ?? original.Password
+            };
+
+            await _userRepository.UpdateAsync(updated);
         }
     }
 }
