@@ -38,6 +38,7 @@ namespace WebApp.Controllers
         }
 
         // GET: UserController/Details/5
+        [Route("/[controller]/{id}")]
         public ActionResult Details(int id)
         {
             return View();
