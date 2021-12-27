@@ -5,12 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebApp.Models
 {
-    public class UserVM
+    public class UserVM : UserPost
     {
         public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime LastLoggedIn { get; set; }
     }

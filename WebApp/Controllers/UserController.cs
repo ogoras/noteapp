@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -51,16 +52,23 @@ namespace WebApp.Controllers
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(UserPost u)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                using (var HttpClient = new HttpClient())
+                {
+                    string userJson = System.Text.Json.JsonSerializer.Serialize(u);
+                    var content = new StringContent(userJson, Encoding.UTF8, "application/json");
+
+                    await HttpClient.PostAsync($"{_endpointUrl}", content);
+                }
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                return View("Error", e);
             }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: UserController/Edit/5
