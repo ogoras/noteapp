@@ -1,26 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using WebApp.Models;
 
 namespace WebApp.Controllers
 {
     public class UserController : Controller
     {
         public IConfiguration Configuration;
+        private string _endpointUrl;
 
-        public UserController(IConfiguration configuration)
+        public UserController(IConfiguration configuration) : base()
         {
             Configuration = configuration;
+            _endpointUrl = Configuration["RestApiUrl"] + "user";
         }
 
         // GET: UserController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            List<UserVM> userList;
+
+            using (var response = await new HttpClient().GetAsync(_endpointUrl))
+            {
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                userList = JsonConvert.DeserializeObject<List<UserVM>>(apiResponse);
+            }
+
+            return View(userList);
         }
 
         // GET: UserController/Details/5

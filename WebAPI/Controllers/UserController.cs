@@ -80,7 +80,7 @@ namespace WebAPI.Controllers
             {
                 await _userService.Delete(id);
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 return NotFound();
             }
