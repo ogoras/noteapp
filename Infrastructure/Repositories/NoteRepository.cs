@@ -15,7 +15,7 @@ namespace Infrastructure.Repositories
         {
             dbSet = appDbContext.Notes;
         }
-        public async Task DelAsync(Note n)
+        public async Task DeleteAsync(Note n)
         {
             await base.DeleteAsync(x => x.Id == n.Id);
         }
@@ -45,6 +45,11 @@ namespace Infrastructure.Repositories
         public async Task<Note> ReadAsync(int id)
         {
             return await base.ReadAsync(x => x.Id == id);
+        }
+
+        public async Task<Note> ReadAsyncWithOwner(int id)
+        {
+            return await base.ReadAsync(dbSet.Include(n=>n.Owner), x => x.Id == id);
         }
 
         public async Task<Note> ReadDetailsAsync(int id)

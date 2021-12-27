@@ -61,8 +61,22 @@ namespace WebAPI.Controllers
 
         // DELETE api/<NotesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int uid, int id)
         {
+            try
+            {
+                await _noteService.Delete(uid, id);
+            }
+            catch (NullReferenceException ex)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
         }
     }
 }

@@ -33,6 +33,16 @@ namespace Infrastructure.Services
             await _noteRepository.CreateAsync(note);
         }
 
+        public async Task Delete(int uid, int id)
+        {
+            Note n = await _noteRepository.ReadAsyncWithOwner(id);
+            if (n == null)
+                throw new NullReferenceException();
+            if (n.Owner.UserId != uid)
+                throw new ArgumentException("User id doesn't match note id");
+            await _noteRepository.DeleteAsync(n);
+        }
+
         public async Task<IEnumerable<NoteDTOwithID>> ReadAll(int uid)
         {
             var notes = await _noteRepository.ReadAllAsync(uid);

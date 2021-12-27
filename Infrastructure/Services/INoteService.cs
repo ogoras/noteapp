@@ -10,5 +10,6 @@ namespace Infrastructure.Services
     {
         public Task CreatePrivate(int uid, NoteDTO n);
         public Task<IEnumerable<NoteDTOwithID>> ReadAll(int uid);
+        public Task Delete(int uid, int id);
     }
 }
