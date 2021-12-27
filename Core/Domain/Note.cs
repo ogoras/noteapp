@@ -10,7 +10,7 @@ namespace Core.Domain
         public Profile? Owner { get; set; }
         public bool Encrypted { get; set; }
         public bool? SharedPublically { get; set; }
-        public String Text { get; set; }
+        public string Text { get; set; }
         public List<Profile>? ShareRecipients { get; set; }
         public List<Photo>? AttachedPhotos { get; set; }
 
