@@ -56,8 +56,20 @@ namespace WebAPI.Controllers
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] UserDTO user)
         {
+            if (user.Username == null && user.Email == null && user.Password == null)
+                return BadRequest();
+            try
+            {
+                await _userService.Update(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
         }
 
         // DELETE api/<UserController>/5

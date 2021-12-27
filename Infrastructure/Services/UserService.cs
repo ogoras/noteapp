@@ -52,10 +52,21 @@ namespace Infrastructure.Services
             return users.Select(x => new UserDTO(x));
         }
 
+        public async Task<UserDTO?> Read(string username)
+        {
+            User u = await _userRepository.ReadAsync(username);
+            return u == null ? null : new UserDTO(u);
+        }
+
         private string CalculatePasswordHash(string password)
         {
             // TODO : proper hash calculation
             return password;
+        }
+
+        public Task Update(UserDTO user)
+        {
+            throw new NotImplementedException();
         }
     }
 }
