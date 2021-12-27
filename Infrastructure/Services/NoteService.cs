@@ -3,6 +3,7 @@ using Core.Repositories;
 using Infrastructure.DTO;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,11 +19,11 @@ namespace Infrastructure.Services
             _profileRepository = profileRepository;
         }
 
-        public async Task CreatePrivate(NoteDTO n)
+        public async Task CreatePrivate(int uid, NoteDTO n)
         {
             Note note = new Note
             {
-                Owner = n.Uid == null ? null : await _profileRepository.ReadAsync((int)n.Uid),
+                Owner = await _profileRepository.ReadAsync(uid),
                 Encrypted = false,
                 SharedPublically = false,
                 Text = n.Text,
@@ -30,6 +31,13 @@ namespace Infrastructure.Services
                 AttachedPhotos = new List<Photo>()
             };
             await _noteRepository.CreateAsync(note);
+        }
+
+        public async Task<IEnumerable<NoteDTOwithID>> ReadAll(int uid)
+        {
+            var notes = await _noteRepository.ReadAllAsync(uid);
+
+            return notes.Select(x => new NoteDTOwithID(x));
         }
     }
 }

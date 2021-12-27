@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Infrastructure.DTO;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("user/{uid}/[controller]")]
     [ApiController]
     public class NotesController : Controller
     {
@@ -21,22 +22,35 @@ namespace WebAPI.Controllers
 
         // GET: api/<NotesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get(int uid)
         {
-            return new string[] { "value1", "value2" };
+            IEnumerable<NoteDTOwithID> notes = await _noteService.ReadAll(uid);
+            return Json(notes);
         }
 
         // GET api/<NotesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public string Get(int uid, int id)
         {
             return "value";
         }
 
         // POST api/<NotesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post(int uid, [FromBody] NoteDTO note)
         {
+            if (note.Text == null)
+                return BadRequest();
+            try
+            {
+                await _noteService.CreatePrivate(uid, note);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
         }
 
         // PUT api/<NotesController>/5

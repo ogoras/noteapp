@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserController : Controller
     {
@@ -46,7 +46,7 @@ namespace WebAPI.Controllers
             {
                 await _userService.Create(user);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }

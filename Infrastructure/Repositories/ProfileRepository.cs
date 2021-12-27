@@ -19,19 +19,14 @@ namespace Infrastructure.Repositories
             await base.DeleteAsync(x => x.Id == p.Id);
         }
 
-        public Task<IEnumerable<Profile>> ReadAllAsync()
+        public async Task<Profile> ReadAsync(int uid)
         {
-            throw new NotImplementedException();
+            return await base.ReadAsync(p => p.UserId == uid);
         }
 
-        public Task<Profile> ReadAsync(int uid)
+        public async Task UpdateAsync(Profile p)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(Profile p)
-        {
-            throw new NotImplementedException();
+            await base.UpdateAsync(p, x => x.Id == p.Id);
         }
     }
 }

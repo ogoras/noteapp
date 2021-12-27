@@ -8,6 +8,7 @@ namespace Infrastructure.Services
 {
     public interface INoteService
     {
-        Task CreatePrivate(NoteDTO n);
+        public Task CreatePrivate(int uid, NoteDTO n);
+        public Task<IEnumerable<NoteDTOwithID>> ReadAll(int uid);
     }
 }
