@@ -36,6 +36,14 @@ namespace Infrastructure.Repositories
             modelBuilder.Entity<Profile>()
                 .HasOne(p => p.ProfilePicture)
                 .WithOne();
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Profile)
+                .WithOne(p => p.User)
+                .HasForeignKey<Profile>(p => p.UserId);
+            modelBuilder.Entity<Profile>()
+                .HasOne(p => p.User)
+                .WithOne(u => u.Profile)
+                .HasForeignKey<User>(u => u.ProfileId);
         }
 
         public DbSet<Note> Notes { get; set; }
