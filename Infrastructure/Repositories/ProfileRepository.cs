@@ -16,7 +16,7 @@ namespace Infrastructure.Repositories
 
         public async Task DelAsync(Profile p)
         {
-            await base.DelAsync(p, x => x.Id == p.Id);
+            await base.DeleteAsync(x => x.Id == p.Id);
         }
 
         public Task<IEnumerable<Profile>> ReadAllAsync()

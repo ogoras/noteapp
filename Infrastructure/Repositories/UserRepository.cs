@@ -15,7 +15,7 @@ namespace Infrastructure.Repositories
         }
         public async Task DeleteAsync(User u)
         {
-            throw new NotImplementedException();
+            await base.DeleteAsync(x => x.Uid == u.Uid);
         }
 
         public async Task<User> ReadAsync(int id)

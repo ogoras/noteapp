@@ -30,7 +30,7 @@ namespace Infrastructure.Repositories
                 await Task.FromException(e);
             }
         }
-        public async Task DelAsync(T t, Func<T, bool> lambda)
+        public async Task DeleteAsync(Func<T, bool> lambda)
         {
             try
             {

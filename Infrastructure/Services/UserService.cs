@@ -80,5 +80,13 @@ namespace Infrastructure.Services
 
             await _userRepository.UpdateAsync(updated);
         }
+
+        public async Task Delete(int id)
+        {
+            User u = await _userRepository.ReadAsync(id);
+            if (u == null)
+                throw new NullReferenceException();
+            await _userRepository.DeleteAsync(u);
+        }
     }
 }

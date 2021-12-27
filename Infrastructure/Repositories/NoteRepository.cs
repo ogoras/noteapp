@@ -17,7 +17,7 @@ namespace Infrastructure.Repositories
         }
         public async Task DelAsync(Note n)
         {
-            await base.DelAsync(n, x => x.Id == n.Id);
+            await base.DeleteAsync(x => x.Id == n.Id);
         }
 
         public async Task<IEnumerable<Note>> ReadAllAsync(int uid)

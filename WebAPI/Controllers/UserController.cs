@@ -74,8 +74,18 @@ namespace WebAPI.Controllers
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            try
+            {
+                await _userService.Delete(id);
+            }
+            catch (NullReferenceException ex)
+            {
+                return NotFound();
+            }
+
+            return Ok();
         }
     }
 }

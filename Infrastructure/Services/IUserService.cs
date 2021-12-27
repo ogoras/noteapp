@@ -12,5 +12,6 @@ namespace Infrastructure.Services
         Task<IEnumerable<UserDTOwithID>> ReadAll();
         Task<UserDTO> Read(string username);
         Task Update(int id, UserDTO user);
+        Task Delete(int id);
     }
 }
