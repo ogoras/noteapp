@@ -16,8 +16,6 @@ namespace Infrastructure.Services
         private readonly IProfileRepository _profileRepository;
         private readonly IUserRepository _userRepository;
 
-        public object KeyDerivation { get; private set; }
-
         public UserService(IUserRepository userRepository, IProfileRepository profileRepository)
         {
             _userRepository = userRepository;
@@ -33,7 +31,7 @@ namespace Infrastructure.Services
             {
                 Username = u.Username,
                 Email = u.Email,
-                Password = GeneratePasswordHash(u.Password),
+                Password = generatePasswordHash(u.Password),
                 DateCreated = DateTime.Now,
                 UserLogins = new List<Login>()
             };
@@ -61,11 +59,11 @@ namespace Infrastructure.Services
 
         public async Task<UserDTO?> Read(string username)
         {
-            User u = await _userRepository.ReadAsync(username);
+            User? u = await _userRepository.ReadAsync(username);
             return u == null ? null : new UserDTO(u);
         }
 
-        private string? GeneratePasswordHash(string? password)
+        private string? generatePasswordHash(string? password)
         {
             if (password == null)
                 return null;
@@ -77,6 +75,14 @@ namespace Infrastructure.Services
             }
             string saltString = Convert.ToBase64String(salt);
 
+            byte[] hash = calculateHash(password, salt);
+            string hashString = Convert.ToBase64String(hash);
+
+            return $"{saltString}${hashString}";
+        }
+
+        private static byte[] calculateHash(string password, byte[] salt)
+        {
             HashAlgorithm algorithm = new SHA256Managed();
 
             byte[] plainTextWithSaltBytes =
@@ -92,23 +98,21 @@ namespace Infrastructure.Services
             }
 
             var hash = algorithm.ComputeHash(plainTextWithSaltBytes);
-            string hashString = Convert.ToBase64String(hash);
-
-            return $"{saltString}${hashString}";
+            return hash;
         }
 
         public async Task Update(int id, UserDTO user)
         {
-            User original = await _userRepository.ReadAsync(id);
+            User? original = await _userRepository.ReadAsync(id);
             if (user.Username != null)
             {
-                User u = await _userRepository.ReadAsync(user.Username);
+                User? u = await _userRepository.ReadAsync(user.Username);
                 if (u != null && u != original)
                     throw new ArgumentException("A user with the username " + user.Username + " already exists!");
             }
             if (user.Email != null)
             {
-                User u = await _userRepository.ReadAsyncByEmail(user.Email);
+                User? u = await _userRepository.ReadAsyncByEmail(user.Email);
                 if (u != null && u != original)
                     throw new ArgumentException("A user with the email " + user.Email + " already exists!");
             }
@@ -117,7 +121,7 @@ namespace Infrastructure.Services
                 Uid = id,
                 Username = user.Username ?? original.Username,
                 Email = user.Email ?? original.Email,
-                Password = GeneratePasswordHash(user.Password) ?? original.Password
+                Password = generatePasswordHash(user.Password) ?? original.Password
             };
 
             await _userRepository.UpdateAsync(updated);
@@ -125,10 +129,37 @@ namespace Infrastructure.Services
 
         public async Task Delete(int id)
         {
-            User u = await _userRepository.ReadAsync(id);
+            User? u = await _userRepository.ReadAsync(id);
             if (u == null)
                 throw new NullReferenceException();
             await _userRepository.DeleteAsync(u);
+        }
+
+        public async Task<string?> Login(LoginDTO login)
+        {
+            if (login.Username == null || login.Password == null)
+                throw new NullReferenceException();
+            User? u = await _userRepository.ReadAsync(login.Username);
+            if (u == null)
+                throw new NullReferenceException();
+            var arr = u.Password.Split('$');
+            var hash = calculateHash(login.Password, Convert.FromBase64String(arr[0]));
+            return compareHashes(hash, Convert.FromBase64String(arr[1])) ? generateJWT(u) : null;
+        }
+
+        private bool compareHashes(byte[] hash, byte[] vs)
+        {
+            if (hash.Length != vs.Length)
+                return false;
+            for (int i = 0; i < hash.Length; i++)
+                if (hash[i] != vs[i])
+                    return false;
+            return true;
+        }
+
+        private string generateJWT(User u)
+        {
+            throw new NotImplementedException();
         }
     }
 }

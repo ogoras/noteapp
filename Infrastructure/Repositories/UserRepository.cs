@@ -18,17 +18,17 @@ namespace Infrastructure.Repositories
             await base.DeleteAsync(x => x.Uid == u.Uid);
         }
 
-        public async Task<User> ReadAsync(int id)
+        public async Task<User?> ReadAsync(int id)
         {
             return await base.ReadAsync(u => u.Uid == id);
         }
 
-        public async Task<User> ReadAsync(string username)
+        public async Task<User?> ReadAsync(string username)
         {
             return await base.ReadAsync(x => x.Username == username);
         }
 
-        public async Task<User> ReadAsyncByEmail(string? email)
+        public async Task<User?> ReadAsyncByEmail(string? email)
         {
             return await base.ReadAsync(x => x.Email == email);
         }

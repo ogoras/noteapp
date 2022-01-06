@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Infrastructure.DTO
 {
-    public class UserDTO
+    public class UserDTO : LoginDTO
     {
         public UserDTO() { }
         public UserDTO(User u)
@@ -14,8 +14,6 @@ namespace Infrastructure.DTO
             Email = u.Email;
             Password = u.Password;
         }
-        public String? Username { get; set; }
         public String? Email { get; set; }
-        public String? Password { get; set; }
     }
 }

@@ -54,11 +54,11 @@ namespace Infrastructure.Repositories
         {
             return await Task.FromResult(detailedSet.Where(lambda));
         }
-        public async Task<T> ReadAsync(Func<T, bool> lambda)
+        public async Task<T?> ReadAsync(Func<T, bool> lambda)
         {
             return await Task.FromResult(dbSet.FirstOrDefault(lambda));
         }
-        public async Task<T> ReadAsync(IIncludableQueryable<T, object?> detailedSet, Func<T, bool> lambda)
+        public async Task<T?> ReadAsync(IIncludableQueryable<T, object?> detailedSet, Func<T, bool> lambda)
         {
             return await Task.FromResult(detailedSet.FirstOrDefault(lambda));
         }

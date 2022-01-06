@@ -87,5 +87,21 @@ namespace WebAPI.Controllers
 
             return Ok();
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO login)
+        {
+            try
+            {
+                string? token = await _userService.Login(login);
+                if (token == null)
+                    return Unauthorized("Wrong password");
+                return Ok(token);
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound("User does not exist");
+            }
+        }
     }
 }

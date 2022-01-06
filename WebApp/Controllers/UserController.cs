@@ -123,10 +123,6 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterVM r)
         {
-            //if (!r.Validate()) {
-            //ModelState.AddModelError("", r.getErrorMessage());
-            //return View(r);
-            //}
             if (!ModelState.IsValid)
                 return View(r);
 
@@ -142,6 +138,40 @@ namespace WebApp.Controllers
                     {
                         ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
                         return View(r);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return View("Error", e);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<ActionResult> Login()
+        {
+            return View(new LoginVM());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Login(LoginVM l)
+        {
+            if (!ModelState.IsValid)
+                return View(l);
+
+            try
+            {
+                using (var HttpClient = new HttpClient())
+                {
+                    string registerJson = System.Text.Json.JsonSerializer.Serialize(l);
+                    var content = new StringContent(registerJson, Encoding.UTF8, "application/json");
+
+                    var response = await HttpClient.PostAsync($"{_endpointUrl}/login", content);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
+                        return View(l);
                     }
                 }
             }
