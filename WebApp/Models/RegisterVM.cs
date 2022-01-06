@@ -10,7 +10,13 @@ namespace WebApp.Models
     public class RegisterVM : UserPost, IValidatableObject
     {
         [Required]
+        [Display(Name = "Confirm password")]
+        [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public new string Password { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -35,7 +41,7 @@ namespace WebApp.Models
             {
                 Username,
                 Email,
-                Password
+                Password = Password
             };
         }
     }
