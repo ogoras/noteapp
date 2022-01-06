@@ -2,8 +2,10 @@
 using Core.Repositories;
 using Infrastructure.DTO;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -159,7 +161,16 @@ namespace Infrastructure.Services
 
         private string generateJWT(User u)
         {
-            throw new NotImplementedException();
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes($"supersupersecret"));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                issuer: "noteapp",
+                audience: "noteapp",
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: credentials
+                );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
