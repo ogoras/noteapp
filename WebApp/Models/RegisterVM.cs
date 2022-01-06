@@ -41,7 +41,7 @@ namespace WebApp.Models
             {
                 Username,
                 Email,
-                Password = Password
+                Password
             };
         }
     }

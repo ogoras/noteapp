@@ -137,7 +137,12 @@ namespace WebApp.Controllers
                     string registerJson = System.Text.Json.JsonSerializer.Serialize(r.getUserData());
                     var content = new StringContent(registerJson, Encoding.UTF8, "application/json");
 
-                    await HttpClient.PostAsync($"{_endpointUrl}", content);
+                    var response = await HttpClient.PostAsync($"{_endpointUrl}", content);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
+                        return View(r);
+                    }
                 }
             }
             catch (Exception e)
