@@ -113,5 +113,38 @@ namespace WebApp.Controllers
                 return View();
             }
         }
+
+        public async Task<ActionResult> Register()
+        {
+            return View(new RegisterVM());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register(RegisterVM r)
+        {
+            //if (!r.Validate()) {
+            //ModelState.AddModelError("", r.getErrorMessage());
+            //return View(r);
+            //}
+            if (!ModelState.IsValid)
+                return View(r);
+
+            try
+            {
+                using (var HttpClient = new HttpClient())
+                {
+                    string registerJson = System.Text.Json.JsonSerializer.Serialize(r.getUserData());
+                    var content = new StringContent(registerJson, Encoding.UTF8, "application/json");
+
+                    await HttpClient.PostAsync($"{_endpointUrl}", content);
+                }
+            }
+            catch (Exception e)
+            {
+                return View("Error", e);
+            }
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
