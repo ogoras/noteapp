@@ -14,5 +14,6 @@ namespace Core.Repositories
         Task UpdateAsync(User u);
         Task DeleteAsync(User u);
         Task<IEnumerable<User>> ReadAllAsync();
+        Task<User> ReadAsyncByEmail(string? email);
     }
 }

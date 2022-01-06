@@ -28,6 +28,11 @@ namespace Infrastructure.Repositories
             return await base.ReadAsync(x => x.Username == username);
         }
 
+        public async Task<User> ReadAsyncByEmail(string? email)
+        {
+            return await base.ReadAsync(x => x.Email == email);
+        }
+
         public async Task UpdateAsync(User u)
         {
             await base.UpdateAsync(u, x => x.Uid == u.Uid);

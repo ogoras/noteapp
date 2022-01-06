@@ -1,9 +1,11 @@
 ﻿using Core.Domain;
 using Core.Repositories;
 using Infrastructure.DTO;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +15,9 @@ namespace Infrastructure.Services
     {
         private readonly IProfileRepository _profileRepository;
         private readonly IUserRepository _userRepository;
+
+        public object KeyDerivation { get; private set; }
+
         public UserService(IUserRepository userRepository, IProfileRepository profileRepository)
         {
             _userRepository = userRepository;
@@ -21,12 +26,14 @@ namespace Infrastructure.Services
         public async Task Create(UserDTO u)
         {
             if (await _userRepository.ReadAsync(u.Username) != null)
-                throw new ArgumentException("User with this username already exists");
+                throw new ArgumentException("A user with the username " + u.Username + " already exists!");
+            if (await _userRepository.ReadAsyncByEmail(u.Email) != null)
+                throw new ArgumentException("A user with the email " + u.Email + " already exists! Did you mean to log in?");
             User user = new User
             {
                 Username = u.Username,
                 Email = u.Email,
-                Password = CalculatePasswordHash(u.Password),
+                Password = GeneratePasswordHash(u.Password),
                 DateCreated = DateTime.Now,
                 UserLogins = new List<Login>()
             };
@@ -58,24 +65,59 @@ namespace Infrastructure.Services
             return u == null ? null : new UserDTO(u);
         }
 
-        private string CalculatePasswordHash(string password)
+        private string? GeneratePasswordHash(string? password)
         {
-            // TODO : proper hash calculation
-            return password;
+            if (password == null)
+                return null;
+
+            byte[] salt = new byte[128 / 8];
+            using (var rngCsp = new RNGCryptoServiceProvider())
+            {
+                rngCsp.GetNonZeroBytes(salt);
+            }
+            string saltString = Convert.ToBase64String(salt);
+
+            HashAlgorithm algorithm = new SHA256Managed();
+
+            byte[] plainTextWithSaltBytes =
+            new byte[password.Length + salt.Length];
+
+            for (int i = 0; i < password.Length; i++)
+            {
+                plainTextWithSaltBytes[i] = (byte)password[i];
+            }
+            for (int i = 0; i < salt.Length; i++)
+            {
+                plainTextWithSaltBytes[password.Length + i] = salt[i];
+            }
+
+            var hash = algorithm.ComputeHash(plainTextWithSaltBytes);
+            string hashString = Convert.ToBase64String(hash);
+
+            return $"{saltString}${hashString}";
         }
 
         public async Task Update(int id, UserDTO user)
         {
             User original = await _userRepository.ReadAsync(id);
-            User u = await _userRepository.ReadAsync(user.Username);
-            if (u != null && u != original)
-                throw new ArgumentException("A user with the username " + user.Username + " already exists!");
+            if (user.Username != null)
+            {
+                User u = await _userRepository.ReadAsync(user.Username);
+                if (u != null && u != original)
+                    throw new ArgumentException("A user with the username " + user.Username + " already exists!");
+            }
+            if (user.Email != null)
+            {
+                User u = await _userRepository.ReadAsyncByEmail(user.Email);
+                if (u != null && u != original)
+                    throw new ArgumentException("A user with the email " + user.Email + " already exists!");
+            }
             User updated = new User()
             {
                 Uid = id,
                 Username = user.Username ?? original.Username,
                 Email = user.Email ?? original.Email,
-                Password = user.Password ?? original.Password
+                Password = GeneratePasswordHash(user.Password) ?? original.Password
             };
 
             await _userRepository.UpdateAsync(updated);
