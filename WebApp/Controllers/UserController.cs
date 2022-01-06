@@ -144,7 +144,7 @@ namespace WebApp.Controllers
             {
                 return View("Error", e);
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
     }
 }

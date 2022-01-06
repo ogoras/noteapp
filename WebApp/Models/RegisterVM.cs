@@ -9,7 +9,8 @@ namespace WebApp.Models
 {
     public class RegisterVM : UserPost, IValidatableObject
     {
-        public string ConfirmPassword;
+        [Required]
+        public string ConfirmPassword { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
