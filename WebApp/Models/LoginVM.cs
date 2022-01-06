@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace WebApp.Models
 {
-    public class UserPost : LoginVM
+    public class LoginVM
     {
         [Required]
-        public string Email { get; set; }
+        public string Username { get; set; }
 
         [Required]
-        public new string Password { get; set; }
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
     }
 }
