@@ -34,6 +34,8 @@ namespace WebApp.Controllers
                 userList = JsonConvert.DeserializeObject<List<UserVM>>(apiResponse);
             }
 
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View(userList);
         }
 
@@ -41,12 +43,16 @@ namespace WebApp.Controllers
         [Route("/[controller]/{id}")]
         public ActionResult Details(int id)
         {
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View();
         }
 
         // GET: UserController/Create
         public ActionResult Create()
         {
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View();
         }
 
@@ -75,6 +81,8 @@ namespace WebApp.Controllers
         // GET: UserController/Edit/5
         public ActionResult Edit(int id)
         {
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View();
         }
 
@@ -89,6 +97,8 @@ namespace WebApp.Controllers
             }
             catch
             {
+                string sessionId = Request.Cookies["sessionid"];
+                ViewBag.SessionId = sessionId;
                 return View();
             }
         }
@@ -96,6 +106,8 @@ namespace WebApp.Controllers
         // GET: UserController/Delete/5
         public ActionResult Delete(int id)
         {
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View();
         }
 
@@ -110,12 +122,16 @@ namespace WebApp.Controllers
             }
             catch
             {
+                string sessionId = Request.Cookies["sessionid"];
+                ViewBag.SessionId = sessionId;
                 return View();
             }
         }
 
         public async Task<ActionResult> Register()
         {
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View(new RegisterVM());
         }
 
@@ -150,6 +166,8 @@ namespace WebApp.Controllers
 
         public async Task<ActionResult> Login()
         {
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View(new LoginVM());
         }
 
@@ -173,11 +191,13 @@ namespace WebApp.Controllers
                         ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
                         return View(l);
                     }
-                    Response.Cookies.Append("sessionid", await response.Content.ReadAsStringAsync(), new CookieOptions()
+                    string sessionId = await response.Content.ReadAsStringAsync();
+                    Response.Cookies.Append("sessionid", sessionId, new CookieOptions()
                     {
                         HttpOnly = true,
                         Secure = true
                     });
+                    ViewBag.SessionId = sessionId;
                 }
             }
             catch (Exception e)

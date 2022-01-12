@@ -37,18 +37,24 @@ namespace WebApp.Controllers
                 notesList = JsonConvert.DeserializeObject<List<NoteVM>>(apiResponse);
             }
 
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View(notesList);
         }
 
         // GET: NotesController/Details/5
         public ActionResult Details(int id)
         {
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View();
         }
 
         // GET: NotesController/Create
         public ActionResult Create()
         {
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View();
         }
 
@@ -63,6 +69,8 @@ namespace WebApp.Controllers
             }
             catch
             {
+                string sessionId = Request.Cookies["sessionid"];
+                ViewBag.SessionId = sessionId;
                 return View();
             }
         }
@@ -70,6 +78,8 @@ namespace WebApp.Controllers
         // GET: NotesController/Edit/5
         public ActionResult Edit(int id)
         {
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View();
         }
 
@@ -84,6 +94,8 @@ namespace WebApp.Controllers
             }
             catch
             {
+                string sessionId = Request.Cookies["sessionid"];
+                ViewBag.SessionId = sessionId;
                 return View();
             }
         }
@@ -91,6 +103,8 @@ namespace WebApp.Controllers
         // GET: NotesController/Delete/5
         public ActionResult Delete(int id)
         {
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View();
         }
 
@@ -105,6 +119,8 @@ namespace WebApp.Controllers
             }
             catch
             {
+                string sessionId = Request.Cookies["sessionid"];
+                ViewBag.SessionId = sessionId;
                 return View();
             }
         }

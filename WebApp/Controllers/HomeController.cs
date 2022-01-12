@@ -20,6 +20,8 @@ namespace WebApp.Controllers
 
         public IActionResult Index()
         {
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return View();
         }
 
