@@ -43,6 +43,13 @@ namespace Infrastructure.Services
             await _noteRepository.DeleteAsync(n);
         }
 
+        public async Task<NoteDTOwithID> Read(int id)
+        {
+            var note = await _noteRepository.ReadAsync(id);
+
+            return new NoteDTOwithID(note);
+        }
+
         public async Task<IEnumerable<NoteDTOwithID>> ReadAll(int uid)
         {
             var notes = await _noteRepository.ReadAllAsync(uid);

@@ -30,9 +30,10 @@ namespace WebAPI.Controllers
 
         // GET api/<NotesController>/5
         [HttpGet("{id}")]
-        public string Get(int uid, int id)
+        public async Task<ActionResult> Get(int uid, int id)
         {
-            return "value";
+            NoteDTOwithID note = await _noteService.Read(id);
+            return Json(note);
         }
 
         // POST api/<NotesController>

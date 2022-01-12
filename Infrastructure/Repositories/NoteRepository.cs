@@ -44,7 +44,7 @@ namespace Infrastructure.Repositories
 
         public async Task<Note> ReadAsync(int id)
         {
-            return await base.ReadAsync(x => x.Id == id);
+            return await base.ReadAsync(dbSet.Include(n => n.Owner).ThenInclude(o => o.User), x => x.Id == id);
         }
 
         public async Task<Note> ReadAsyncWithOwner(int id)

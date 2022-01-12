@@ -58,8 +58,10 @@ namespace WebApp.Controllers
         }
 
         // GET: NotesController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create(int uid)
         {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
             return View(new NoteVM());
@@ -70,6 +72,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(int uid, NoteVM n)
         {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
             try
             {
                 using (var HttpClient = new HttpClient())
@@ -88,28 +92,52 @@ namespace WebApp.Controllers
         }
 
         // GET: NotesController/Edit/5
-        public ActionResult Edit(int id)
+        [Route("{id}")]
+        public async Task<ActionResult> Edit(int uid, int id)
         {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
+
+            NoteWithIDVM note;
+
+            try
+            {
+                using (var response = await new HttpClient().GetAsync($"{getEndpointUrl(uid)}/{id}"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    note = JsonConvert.DeserializeObject<NoteWithIDVM>(apiResponse);
+                }
+            }
+            catch (Exception e)
+            {
+                return View("Error", e);
+            }
+
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
-            return View();
+            return View(note);
         }
 
         // POST: NotesController/Edit/5
-        [HttpPost]
+        [HttpPost("{id}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int uid, int id, NoteWithIDVM n)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                using (var httpClient = new HttpClient())
+                {
+                    string noteString = System.Text.Json.JsonSerializer.Serialize(n);
+                    var content = new StringContent(noteString, Encoding.UTF8, "application/json");
+
+                    await httpClient.PutAsync($"{getEndpointUrl(uid)}/id", content);
+                }
             }
-            catch
+            catch (Exception e)
             {
-                string sessionId = Request.Cookies["sessionid"];
-                ViewBag.SessionId = sessionId;
-                return View();
+                return View("Error", e);
             }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: NotesController/Delete/5
