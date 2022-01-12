@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApp.Models.NoteVM>
+﻿@model IEnumerable<WebApp.Models.NoteWithParamsVM>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -6,6 +6,18 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OwnerUsername)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Encrypted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SharedPublically)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Text)
             </th>
@@ -15,6 +27,18 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerUsername)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Encrypted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SharedPublically)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Text)
             </td>

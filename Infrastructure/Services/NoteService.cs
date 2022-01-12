@@ -19,13 +19,13 @@ namespace Infrastructure.Services
             _profileRepository = profileRepository;
         }
 
-        public async Task CreatePrivate(int uid, NoteDTO n)
+        public async Task Create(int uid, NoteDTO n)
         {
             Note note = new Note
             {
                 Owner = await _profileRepository.ReadAsync(uid),
-                Encrypted = false,
-                SharedPublically = false,
+                Encrypted = n.Encrypted,
+                SharedPublically = n.SharedPublically,
                 Text = n.Text,
                 ShareRecipients = new List<Profile>(),
                 AttachedPhotos = new List<Photo>()

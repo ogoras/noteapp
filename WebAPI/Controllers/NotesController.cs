@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
                 return BadRequest();
             try
             {
-                await _noteService.CreatePrivate(uid, note);
+                await _noteService.Create(uid, note);
             }
             catch (ArgumentException ex)
             {

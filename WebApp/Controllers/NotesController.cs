@@ -35,12 +35,12 @@ namespace WebApp.Controllers
             if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
                 return RedirectToAction("Index", "Home");
 
-            List<NoteVM> notesList;
+            List<NoteWithParamsVM> notesList;
 
             using (var response = await new HttpClient().GetAsync(getEndpointUrl(uid)))
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                notesList = JsonConvert.DeserializeObject<List<NoteVM>>(apiResponse);
+                notesList = JsonConvert.DeserializeObject<List<NoteWithParamsVM>>(apiResponse);
             }
 
             string sessionId = Request.Cookies["sessionid"];
