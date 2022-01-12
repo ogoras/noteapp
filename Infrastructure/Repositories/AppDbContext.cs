@@ -51,7 +51,6 @@ namespace Infrastructure.Repositories
         public DbSet<User> Users { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Login> Logins { get; set; }
-
         public DbSet<Session> Sessions { get; set; }
     }
 }

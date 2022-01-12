@@ -173,6 +173,11 @@ namespace WebApp.Controllers
                         ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
                         return View(l);
                     }
+                    Response.Cookies.Append("sessionid", await response.Content.ReadAsStringAsync(), new CookieOptions()
+                    {
+                        HttpOnly = true,
+                        Secure = true
+                    });
                 }
             }
             catch (Exception e)
