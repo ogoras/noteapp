@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using WebApp.Models;
+using WebApp.Services;
 
 namespace WebApp.Controllers
 {
@@ -15,10 +16,12 @@ namespace WebApp.Controllers
     public class NotesController : Controller
     {
         public IConfiguration Configuration;
+        public ISessionService _sessionService;
 
-        public NotesController(IConfiguration configuration) : base()
+        public NotesController(IConfiguration configuration, ISessionService sessionService) : base()
         {
             Configuration = configuration;
+            _sessionService = sessionService;
         }
 
         private string getEndpointUrl (int uid)
@@ -29,6 +32,9 @@ namespace WebApp.Controllers
         // GET: NotesController
         public async Task<ActionResult> Index(int uid)
         {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
+
             List<NoteVM> notesList;
 
             using (var response = await new HttpClient().GetAsync(getEndpointUrl(uid)))
