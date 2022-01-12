@@ -49,5 +49,26 @@ namespace Infrastructure.Services
 
             return notes.Select(x => new NoteDTOwithID(x));
         }
+
+        public async Task Update(int uid, int id, NoteDTO n)
+        {
+            Note? original = await _noteRepository.ReadAsync(id);
+
+            if (original == null)
+                throw new NullReferenceException("Note doesn't exist");
+
+            Note updated = new Note()
+            {
+                AttachedPhotos = original.AttachedPhotos,
+                Encrypted = n.Encrypted,
+                SharedPublically = n.SharedPublically,
+                Text = n.Text,
+                Id = original.Id,
+                ShareRecipients = original.ShareRecipients,
+                Owner = original.Owner
+            };
+
+            await _noteRepository.UpdateAsync(updated);
+        }
     }
 }

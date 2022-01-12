@@ -55,8 +55,20 @@ namespace WebAPI.Controllers
 
         // PUT api/<NotesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int uid, int id, [FromBody] NoteDTO note)
         {
+            if (note.Text == null)
+                return BadRequest();
+            try
+            {
+                await _noteService.Update(uid, id, note);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
         }
 
         // DELETE api/<NotesController>/5

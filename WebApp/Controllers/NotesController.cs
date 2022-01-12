@@ -62,7 +62,7 @@ namespace WebApp.Controllers
         {
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
-            return View();
+            return View(new NoteVM());
         }
 
         // POST: NotesController/Create

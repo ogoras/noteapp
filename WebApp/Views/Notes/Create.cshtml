@@ -11,10 +11,13 @@
                     <input class="form-check-input" asp-for="Encrypted" /> @Html.DisplayNameFor(model => model.Encrypted)
                 </label>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="SharedPublically" /> @Html.DisplayNameFor(model => model.SharedPublically)
-                </label>
+            <div class="form-group">
+                @Html.DisplayNameFor(model => model.SharedPublically)
+                <select asp-for="SharedPublically">
+                    <option selected="selected" value=null>Not set</option>
+                    <option value=true>Yes</option>
+                    <option value=false>No</option>
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="Text" class="control-label"></label>

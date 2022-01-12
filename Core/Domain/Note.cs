@@ -18,7 +18,7 @@ namespace Core.Domain
         {
             Owner = n.Owner;
             Encrypted = n.Encrypted;
-            SharedPublically = Encrypted ? SharedPublically : n.SharedPublically;
+            SharedPublically = Encrypted ? null : n.SharedPublically ?? SharedPublically;
             Text = n.Text;
             ShareRecipients = n.ShareRecipients;
             AttachedPhotos = n.AttachedPhotos;

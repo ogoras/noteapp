@@ -12,6 +12,8 @@ namespace Infrastructure.DTO
         {
             Uid = n.Owner.UserId;
             Text = n.Text;
+            Encrypted = n.Encrypted;
+            SharedPublically = n.SharedPublically;
         }
 
         public int? Uid { get; set; }

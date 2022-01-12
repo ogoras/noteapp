@@ -62,7 +62,7 @@ namespace Infrastructure.Repositories
 
         public async Task UpdateAsync(Note n)
         {
-            throw new NotImplementedException();
+            await base.UpdateAsync(n, x => x.Id == n.Id);
         }
     }
 }
