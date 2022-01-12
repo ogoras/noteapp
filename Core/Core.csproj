@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Domain\Session.cs~RFfaf2e89.TMP" />
+  </ItemGroup>
 </Project>
