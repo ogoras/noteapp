@@ -10,13 +10,11 @@ namespace Infrastructure.DTO
         public NoteDTO() { }
         public NoteDTO(Note n)
         {
-            Username = n.Owner.User.Username ;
             Uid = n.Owner.UserId;
             Text = n.Text;
         }
 
         public int? Uid { get; set; }
-        public string Username { get; set; }
         public string Text { get; set; }
         public bool Encrypted { get; set; }
         public bool? SharedPublically { get; set; }

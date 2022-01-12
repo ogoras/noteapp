@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebApp.Models
 {
-    public class NoteWithParamsVM : NoteVM
+    public class NoteWithIDVM : NoteVM
     {
+        public int Id { get; set; }
         public string OwnerUsername { get; set; }
-        public bool Encrypted { get; set; }
-        public bool? SharedPublically { get; set; }
     }
 }

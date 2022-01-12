@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,12 +36,12 @@ namespace WebApp.Controllers
             if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
                 return RedirectToAction("Index", "Home");
 
-            List<NoteWithParamsVM> notesList;
+            List<NoteWithIDVM> notesList;
 
             using (var response = await new HttpClient().GetAsync(getEndpointUrl(uid)))
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                notesList = JsonConvert.DeserializeObject<List<NoteWithParamsVM>>(apiResponse);
+                notesList = JsonConvert.DeserializeObject<List<NoteWithIDVM>>(apiResponse);
             }
 
             string sessionId = Request.Cookies["sessionid"];
@@ -67,18 +68,23 @@ namespace WebApp.Controllers
         // POST: NotesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(int uid, NoteVM n)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                using (var HttpClient = new HttpClient())
+                {
+                    string userJson = System.Text.Json.JsonSerializer.Serialize(n);
+                    var content = new StringContent(userJson, Encoding.UTF8, "application/json");
+
+                    await HttpClient.PostAsync(getEndpointUrl(uid), content);
+                }
             }
-            catch
+            catch (Exception e)
             {
-                string sessionId = Request.Cookies["sessionid"];
-                ViewBag.SessionId = sessionId;
-                return View();
+                return View("Error", e);
             }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: NotesController/Edit/5

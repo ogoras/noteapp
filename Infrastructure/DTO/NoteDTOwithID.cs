@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Infrastructure.DTO
 {
-    public class NoteDTOwithID : NoteDTO
+    public class NoteDTOwithID : NoteDTOwithUsername
     {
         public NoteDTOwithID(Note n) : base(n)
         {
