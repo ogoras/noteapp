@@ -7,6 +7,6 @@ namespace WebApp.Services
 {
     public interface ISessionService
     {
-        bool IsLoggedIn();
+        Task<bool> IsLoggedIn(string sessionId);
     }
 }
