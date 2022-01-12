@@ -10,5 +10,6 @@ namespace WebApp.Services
         Task<bool> IsLoggedIn(string sessionId);
         Task<int?> UidLoggedIn(string sessionId);
         Task EndSession(string sessionId);
+        Task<string?> UsernameLoggedIn(string sessionId);
     }
 }
