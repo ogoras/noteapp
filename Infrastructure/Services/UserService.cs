@@ -35,7 +35,8 @@ namespace Infrastructure.Services
                 Email = u.Email,
                 Password = generatePasswordHash(u.Password),
                 DateCreated = DateTime.Now,
-                UserLogins = new List<Login>()
+                UserLogins = new List<Login>(),
+                Sessions = new List<Session>()
             };
             await _userRepository.CreateAsync(user);
             Profile profile = new Profile

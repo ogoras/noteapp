@@ -15,9 +15,10 @@ namespace Core.Domain
         public DateTime DateCreated { get; set; }
         public Login? LastLogin { get; set; }
         public int? LastLoginId { get; set; }
-        public List<Login>? UserLogins { get; set; }
+        public List<Login> UserLogins { get; set; }
         public Profile? Profile { get; set; }
         public int? ProfileId { get; set; }
+        public List<Session> Sessions { get; set; }
 
         public void updateValues(User u)
         {
@@ -28,6 +29,7 @@ namespace Core.Domain
             LastLoginId = u.LastLoginId ?? LastLoginId;
             UserLogins = u.UserLogins ?? UserLogins;
             Profile = u.Profile ?? Profile;
+            Sessions = u.Sessions ?? Sessions;
         }
     }
 }
