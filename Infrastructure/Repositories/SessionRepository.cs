@@ -1,5 +1,6 @@
 ﻿using Core.Domain;
 using Core.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,9 +20,10 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Session?> ReadAsync(Guid id)
+        public async Task<Session?> ReadAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await base.ReadAsync(dbSet.Include(session => session.User),
+                x => x.Id == id);
         }
 
         public Task<Session?> ReadAsync(string id)

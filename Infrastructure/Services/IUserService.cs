@@ -14,5 +14,6 @@ namespace Infrastructure.Services
         Task Update(int id, UserDTO user);
         Task Delete(int id);
         Task<string?> Login(LoginDTO login);
+        Task<string?> UsernameFromSession(Guid sessionid);
     }
 }

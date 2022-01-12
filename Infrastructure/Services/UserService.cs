@@ -187,5 +187,11 @@ namespace Infrastructure.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public async Task<string?> UsernameFromSession(Guid sessionid)
+        {
+            Session? s = await _sessionRepository.ReadAsync(sessionid);
+            return s == null ? null : s.User.Username;
+        }
     }
 }
