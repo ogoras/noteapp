@@ -38,5 +38,40 @@ namespace WebApp.Services
 
             return true;
         }
+
+        public async Task<int?> UidLoggedIn(string sessionId)
+        {
+            string? username = await UsernameLoggedIn(sessionId);
+            if (username == null)
+                return null;
+
+            using (var response = await new HttpClient().GetAsync(_endpointUrl + $"/username/{username}"))
+            {
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                IdObject user = JsonConvert.DeserializeObject<IdObject>(apiResponse);
+                return user.Id;
+            }
+        }
+
+        public async Task<string?> UsernameLoggedIn(string sessionId)
+        {
+            if (!await IsLoggedIn(sessionId))
+                return null;
+
+            string username;
+
+            using (var response = await new HttpClient().GetAsync(_endpointUrl + $"/bysession/{sessionId}"))
+            {
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                username = JsonConvert.DeserializeObject<string>(apiResponse);
+            }
+
+            return username;
+        }
+
+        private class IdObject
+        {
+            public int Id { get; set; }
+        }
     }
 }

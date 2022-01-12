@@ -36,6 +36,15 @@ namespace WebAPI.Controllers
             return "value";
         }
 
+        [HttpGet("username/{id}")]
+        public async Task<IActionResult> GetByUsername(string id)
+        {
+            UserDTOwithID? user = await _userService.Read(id);
+            if (user == null)
+                return NotFound();
+            return Json(user);
+        }
+
         // POST api/<UserController>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDTO user)

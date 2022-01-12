@@ -62,10 +62,10 @@ namespace Infrastructure.Services
             return users.Select(x => new UserDTOwithID(x));
         }
 
-        public async Task<UserDTO?> Read(string username)
+        public async Task<UserDTOwithID?> Read(string username)
         {
             User? u = await _userRepository.ReadAsync(username);
-            return u == null ? null : new UserDTO(u);
+            return u == null ? null : new UserDTOwithID(u);
         }
 
         private string? generatePasswordHash(string? password)

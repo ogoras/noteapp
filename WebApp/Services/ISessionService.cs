@@ -8,6 +8,7 @@ namespace WebApp.Services
     public interface ISessionService
     {
         Task<bool> IsLoggedIn(string sessionId);
+        Task<int?> UidLoggedIn(string sessionId);
         Task EndSession(string sessionId);
     }
 }

@@ -10,7 +10,7 @@ namespace Infrastructure.Services
     {
         Task Create(UserDTO u);
         Task<IEnumerable<UserDTOwithID>> ReadAll();
-        Task<UserDTO?> Read(string username);
+        Task<UserDTOwithID?> Read(string username);
         Task Update(int id, UserDTO user);
         Task Delete(int id);
         Task<string?> Login(LoginDTO login);
