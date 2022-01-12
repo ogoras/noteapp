@@ -8,6 +8,6 @@ namespace WebApp.Models
     public class NoteWithIDVM : NoteVM
     {
         public int Id { get; set; }
-        public string OwnerUsername { get; set; }
+        public string Username { get; set; }
     }
 }
