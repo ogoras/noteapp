@@ -10,7 +10,7 @@ namespace Core.Repositories
     {
         Task CreateAsync(User u);
         Task<User?> ReadAsync(int id);
-        Task<User?> ReadAsync(String username);
+        Task<User?> ReadAsync(string username);
         Task UpdateAsync(User u);
         Task DeleteAsync(User u);
         Task<IEnumerable<User>> ReadAllAsync();

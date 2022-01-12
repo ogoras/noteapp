@@ -35,8 +35,10 @@ namespace WebAPI
             services.AddScoped<INoteService, NoteService>();
 
             services.AddScoped<IProfileRepository, ProfileRepository>();
-            services.AddScoped<IUserService, UserService>();
 
+            services.AddScoped<ISessionRepository, SessionRepository>();
+
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddDbContext<AppDbContext>(

@@ -17,11 +17,13 @@ namespace Infrastructure.Services
     {
         private readonly IProfileRepository _profileRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ISessionRepository _sessionRepository;
 
-        public UserService(IUserRepository userRepository, IProfileRepository profileRepository)
+        public UserService(IUserRepository userRepository, IProfileRepository profileRepository, ISessionRepository sessionRepository)
         {
             _userRepository = userRepository;
             _profileRepository = profileRepository;
+            _sessionRepository = sessionRepository;
         }
         public async Task Create(UserDTO u)
         {
@@ -147,7 +149,19 @@ namespace Infrastructure.Services
                 throw new NullReferenceException();
             var arr = u.Password.Split('$');
             var hash = calculateHash(login.Password, Convert.FromBase64String(arr[0]));
-            return compareHashes(hash, Convert.FromBase64String(arr[1])) ? generateJWT(u) : null;
+            return compareHashes(hash, Convert.FromBase64String(arr[1])) ? generateSession(u) : null;
+        }
+
+        private string generateSession(User u)
+        {
+            Session s = new Session()
+            {
+                Id = Guid.NewGuid(),
+                User = u,
+                LastActivity = DateTime.Now
+            };
+            _sessionRepository.CreateAsync(s);
+            return s.Id.ToString();
         }
 
         private bool compareHashes(byte[] hash, byte[] vs)
