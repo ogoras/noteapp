@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using WebApp.Models;
+using WebApp.Services;
 
 namespace WebApp.Controllers
 {
@@ -16,11 +17,13 @@ namespace WebApp.Controllers
     {
         public IConfiguration Configuration;
         private string _endpointUrl;
+        public ISessionService _sessionService;
 
-        public UserController(IConfiguration configuration) : base()
+        public UserController(IConfiguration configuration, ISessionService sessionService) : base()
         {
             Configuration = configuration;
             _endpointUrl = Configuration["RestApiUrl"] + "user";
+            _sessionService = sessionService;
         }
 
         // GET: UserController
@@ -204,6 +207,15 @@ namespace WebApp.Controllers
             {
                 return View("Error", e);
             }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            string sessionId = Request.Cookies["sessionid"];
+            await _sessionService.EndSession(sessionId);
+            Response.Cookies.Delete("sessionid");
             return RedirectToAction("Index", "Home");
         }
     }

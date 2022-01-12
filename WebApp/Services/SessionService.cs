@@ -18,6 +18,12 @@ namespace WebApp.Services
             Configuration = configuration;
             _endpointUrl = Configuration["RestApiUrl"] + "user";
         }
+
+        public async Task EndSession(string sessionId)
+        {
+            await new HttpClient().DeleteAsync(_endpointUrl + $"/session/{sessionId}");
+        }
+
         public async Task<bool> IsLoggedIn(string? sessionId)
         {
             if (sessionId == null)

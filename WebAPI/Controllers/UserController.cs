@@ -110,5 +110,19 @@ namespace WebAPI.Controllers
             string? username = await _userService.UsernameFromSession(id);
             return Json(username);
         }
+
+        [HttpDelete("session/{id}")]
+        public async Task<IActionResult> DeleteSession(Guid id)
+        {
+            try
+            {
+                await _userService.EndSession(id);
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message);
+            }
+            return Ok();
+        }
     }
 }

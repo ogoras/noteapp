@@ -36,8 +36,10 @@
                             }
                             else
                             {
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
+                    <li class="nav-link text-dark">
+                        <form asp-area="" asp-controller="User" asp-action="Logout" id="logoutForm" method="post" class="navbar-right">
+                            <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+                        </form>
                     </li>
                             }
                             }

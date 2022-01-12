@@ -193,5 +193,13 @@ namespace Infrastructure.Services
             Session? s = await _sessionRepository.ReadAsync(sessionid);
             return s == null ? null : s.User.Username;
         }
+
+        public async Task EndSession(Guid id)
+        {
+            Session? s = await _sessionRepository.ReadAsync(id);
+            if (s == null)
+                throw new NullReferenceException();
+            await _sessionRepository.DeleteAsync(s);
+        }
     }
 }

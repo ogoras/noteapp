@@ -15,9 +15,9 @@ namespace Infrastructure.Repositories
             dbSet = appDbContext.Sessions;
         }
 
-        public Task DeleteAsync(Session s)
+        public async Task DeleteAsync(Session s)
         {
-            throw new NotImplementedException();
+            await base.DeleteAsync(x => x.Id == s.Id);
         }
 
         public async Task<Session?> ReadAsync(Guid id)
