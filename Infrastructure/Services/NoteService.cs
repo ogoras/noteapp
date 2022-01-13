@@ -25,7 +25,7 @@ namespace Infrastructure.Services
             {
                 Owner = await _profileRepository.ReadAsync(uid),
                 Encrypted = n.Encrypted,
-                SharedPublically = n.SharedPublically,
+                SharedPublically = n.Encrypted ? null : (bool?)(n.SharedPublically ?? false),
                 Text = n.Text,
                 ShareRecipients = new List<Profile>(),
                 AttachedPhotos = new List<Photo>()
