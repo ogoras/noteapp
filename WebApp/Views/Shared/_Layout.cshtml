@@ -21,6 +21,9 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Notes" asp-action="Public">Public notes</a>
+                        </li>
                         @{
                             if (!await SessionService.IsLoggedIn(ViewBag.SessionId))
                             {
@@ -34,10 +37,10 @@
                             else
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Notes" asp-action="Index" asp-route-uid="@await SessionService.UidLoggedIn(ViewBag.SessionId)">Notes</a>
-</li>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Notes" asp-action="Index" asp-route-uid="@await SessionService.UidLoggedIn(ViewBag.SessionId)">Your notes</a>
+                                </li>
 
-<li class="nav-link text-dark">
+                                <li class="nav-link text-dark">
                                     <form asp-area="" asp-controller="User" asp-action="Logout" id="logoutForm" method="post" class="navbar-right">
                                         <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
                                     </form>
