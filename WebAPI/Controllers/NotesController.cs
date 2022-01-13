@@ -91,5 +91,12 @@ namespace WebAPI.Controllers
 
             return Ok();
         }
+
+        [HttpGet("/[controller]/public")]
+        public async Task<IActionResult> GetPublic()
+        {
+            IEnumerable<NoteDTOwithID> notes = await _noteService.ReadPublic();
+            return Json(notes);
+        }
     }
 }

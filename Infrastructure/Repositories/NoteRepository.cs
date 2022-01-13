@@ -60,6 +60,13 @@ namespace Infrastructure.Repositories
                 x => x.Id == id);
         }
 
+        public async Task<IEnumerable<Note>> ReadPublicAsync()
+        {
+            return await base.ReadAllAsync(dbSet.Include(note => note.Owner)
+                .ThenInclude(profile => profile.User),
+                x => x.SharedPublically == true);
+        }
+
         public async Task UpdateAsync(Note n)
         {
             await base.UpdateAsync(n, x => x.Id == n.Id);

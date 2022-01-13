@@ -19,5 +19,6 @@ namespace Core.Repositories
         Task<IEnumerable<Note>> ReadAllSharedToAsync(int uid);
         Task<IEnumerable<Note>> ReadAllSharedByAsync(int uid);
         Task<IEnumerable<Note>> ReadAllEncryptedAsync(int uid);
+        Task<IEnumerable<Note>> ReadPublicAsync();
     }
 }

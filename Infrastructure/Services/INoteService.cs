@@ -13,5 +13,6 @@ namespace Infrastructure.Services
         public Task Delete(int uid, int id);
         public Task Update(int uid, int id, NoteDTO n);
         public Task<NoteDTOwithID> Read(int id);
+        public Task<IEnumerable<NoteDTOwithID>> ReadPublic();
     }
 }
