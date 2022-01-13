@@ -164,5 +164,21 @@ namespace WebApp.Controllers
                 return View();
             }
         }
+
+        [Route("/[controller]/{action}")]
+        public async Task<ActionResult> Public()
+        {
+            List<PublicNoteVM> notesList;
+
+            using (var response = await new HttpClient().GetAsync(Configuration["RestApiUrl"] + "notes/public"))
+            {
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                notesList = JsonConvert.DeserializeObject<List<PublicNoteVM>>(apiResponse);
+            }
+
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
+            return View(notesList ?? new List<PublicNoteVM>());
+        }
     }
 }
