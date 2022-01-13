@@ -40,6 +40,10 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Notes" asp-action="Index" asp-route-uid="@await SessionService.UidLoggedIn(ViewBag.SessionId)">Your notes</a>
                                 </li>
 
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Notes" asp-action="Encrypted" asp-route-uid="@await SessionService.UidLoggedIn(ViewBag.SessionId)">Encrypted notes</a>
+                                </li>
+
                                 <li class="nav-link text-dark">
                                     <form asp-area="" asp-controller="User" asp-action="Logout" id="logoutForm" method="post" class="navbar-right">
                                         <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
