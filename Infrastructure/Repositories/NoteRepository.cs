@@ -29,7 +29,9 @@ namespace Infrastructure.Repositories
 
         public async Task<IEnumerable<Note>> ReadAllEncryptedAsync(int uid)
         {
-            throw new NotImplementedException();
+            return await base.ReadAllAsync(dbSet.Include(note => note.Owner)
+                .ThenInclude(profile => profile.User),
+                x => x.Owner.User.Uid == uid && x.Encrypted);
         }
 
         public async Task<IEnumerable<Note>> ReadAllSharedByAsync(int uid)

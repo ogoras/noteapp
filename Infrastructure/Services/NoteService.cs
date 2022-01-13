@@ -57,6 +57,13 @@ namespace Infrastructure.Services
             return notes.Select(x => new NoteDTOwithID(x));
         }
 
+        public async Task<IEnumerable<NoteDTOwithID>> ReadEncrypted(int uid)
+        {
+            var notes = await _noteRepository.ReadAllEncryptedAsync(uid);
+
+            return notes.Select(x => new NoteDTOwithID(x));
+        }
+
         public async Task<IEnumerable<NoteDTOwithID>> ReadPublic()
         {
             var notes = await _noteRepository.ReadPublicAsync();

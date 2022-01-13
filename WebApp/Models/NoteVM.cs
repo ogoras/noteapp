@@ -10,6 +10,7 @@ namespace WebApp.Models
     {
         [Display(Name = "Encrypt")]
         public bool Encrypted { get; set; }
+        public string Key { get; set; }
 
         [Display(Name="Share publically")]
         public bool? SharedPublically { get; set; }

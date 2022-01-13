@@ -14,5 +14,7 @@ namespace Infrastructure.Services
         public Task Update(int uid, int id, NoteDTO n);
         public Task<NoteDTOwithID> Read(int id);
         public Task<IEnumerable<NoteDTOwithID>> ReadPublic();
+
+        public Task<IEnumerable<NoteDTOwithID>> ReadEncrypted(int uid);
     }
 }

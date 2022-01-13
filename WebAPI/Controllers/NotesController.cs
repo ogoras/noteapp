@@ -98,5 +98,12 @@ namespace WebAPI.Controllers
             IEnumerable<NoteDTOwithID> notes = await _noteService.ReadPublic();
             return Json(notes);
         }
+
+        [HttpGet("encrypted")]
+        public async Task<IActionResult> GetEncrypted(int uid)
+        {
+            IEnumerable<NoteDTOwithID> notes = await _noteService.ReadEncrypted(uid);
+            return Json(notes);
+        }
     }
 }
