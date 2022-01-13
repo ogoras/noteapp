@@ -52,11 +52,22 @@ namespace WebApp.Controllers
         }
 
         // GET: NotesController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int uid, int id)
         {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
+
+            SimpleNoteVM note;
+
+            using (var response = await new HttpClient().GetAsync($"{getEndpointUrl(uid)}/{id}"))
+            {
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                note = JsonConvert.DeserializeObject<SimpleNoteVM>(apiResponse);
+            }
+
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
-            return View();
+            return View(note);
         }
 
         // GET: NotesController/Create

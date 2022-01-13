@@ -10,6 +10,7 @@ namespace WebApp.Models
     {
         [Key]
         public int Id { get; set; }
+        [DataType(DataType.MultilineText)]
         public string Text { get; set; }
         public string TextShort
         {
