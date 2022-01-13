@@ -130,7 +130,7 @@ namespace WebApp.Controllers
                     string noteString = System.Text.Json.JsonSerializer.Serialize(n);
                     var content = new StringContent(noteString, Encoding.UTF8, "application/json");
 
-                    await httpClient.PutAsync($"{getEndpointUrl(uid)}/id", content);
+                    await httpClient.PutAsync($"{getEndpointUrl(uid)}/{id}", content);
                 }
             }
             catch (Exception e)
