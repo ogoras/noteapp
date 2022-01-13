@@ -10,7 +10,7 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Text)
+                @Html.DisplayNameFor(model => model.TextShort)
             </th>
             <th></th>
         </tr>
@@ -22,7 +22,7 @@
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Text)
+                @Html.DisplayFor(modelItem => item.TextShort)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

@@ -11,5 +11,13 @@ namespace WebApp.Models
         [Key]
         public int Id { get; set; }
         public string Text { get; set; }
+        public string TextShort
+        {
+            get
+            {
+                if (Text.Length > 90) { return Text.Substring(0, 90) + "..."; }
+                else { return Text; }
+            }
+        }
     }
 }

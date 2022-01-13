@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -74,6 +76,10 @@ namespace WebApp.Controllers
         {
             if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
                 return RedirectToAction("Index", "Home");
+
+            if (n.Encrypted)
+                n = encryptText(n);
+
             try
             {
                 using (var HttpClient = new HttpClient())
@@ -89,6 +95,45 @@ namespace WebApp.Controllers
                 return View("Error", e);
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        private NoteVM encryptText(NoteVM n)
+        {
+            string keyString = n.Key;
+            Aes myAes = Aes.Create();
+
+            byte[] keyBytes =
+            new byte[keyString.Length];
+
+            for (int i = 0; i < keyString.Length; i++)
+            {
+                keyBytes[i] = (byte)keyString[i];
+            }
+
+            HashAlgorithm algorithm = new SHA256Managed();
+
+            myAes.Key = algorithm.ComputeHash(keyBytes);
+
+            ICryptoTransform encryptor = myAes.CreateEncryptor(myAes.Key, myAes.IV);
+
+            byte[] encrypted;
+
+            // Create the streams used for encryption.
+            using (MemoryStream msEncrypt = new MemoryStream())
+            {
+                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                {
+                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                    {
+                        //Write all data to the stream.
+                        swEncrypt.Write(n.Text);
+                    }
+                    encrypted = msEncrypt.ToArray();
+                }
+            }
+
+            n.Text = $"{Convert.ToBase64String(myAes.IV)}${Convert.ToBase64String(encrypted)}";
+            return n;
         }
 
         // GET: NotesController/Edit/5
