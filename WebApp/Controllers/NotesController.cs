@@ -123,6 +123,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int uid, int id, NoteWithIDVM n)
         {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
             try
             {
                 using (var httpClient = new HttpClient())
@@ -141,8 +143,10 @@ namespace WebApp.Controllers
         }
 
         // GET: NotesController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int uid, int id)
         {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
             return View();
@@ -151,8 +155,10 @@ namespace WebApp.Controllers
         // POST: NotesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int uid, int id, IFormCollection collection)
         {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
             try
             {
                 return RedirectToAction(nameof(Index));
@@ -179,6 +185,24 @@ namespace WebApp.Controllers
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
             return View(notesList ?? new List<PublicNoteVM>());
+        }
+
+        public async Task<ActionResult> Encrypted(int uid)
+        {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
+
+            List<SimpleNoteVM> notesList;
+
+            using (var response = await new HttpClient().GetAsync($"{getEndpointUrl(uid)}/encrypted"))
+            {
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                notesList = JsonConvert.DeserializeObject<List<SimpleNoteVM>>(apiResponse);
+            }
+
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
+            return View(notesList ?? new List<SimpleNoteVM>());
         }
     }
 }

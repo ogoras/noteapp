@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace WebApp.Models
 {
-    public class PublicNoteVM : SimpleNoteVM
+    public class SimpleNoteVM
     {
-        public string Username { get; set; }
-        
+        [Key]
+        public int Id { get; set; }
+        public string Text { get; set; }
     }
 }
