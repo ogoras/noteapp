@@ -12,6 +12,7 @@ namespace WebApp.Models
         public int Id { get; set; }
         [DataType(DataType.MultilineText)]
         public string Text { get; set; }
+        [DataType(DataType.Password)]
         public string Key { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace WebApp.Models
         public bool Encrypted { get; set; }
 
         [Display(Name = "Encryption Key")]
+        [DataType(DataType.Password)]
         public string Key { get; set; }
 
         [Display(Name="Share publically")]

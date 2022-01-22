@@ -93,7 +93,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Decrypt(DecryptVM v)
         {
-            throw new NotImplementedException();
+            SimpleNoteVM decryptedNote = decryptText(v);
+
+            return View("Details", decryptedNote);
         }
 
         // GET: NotesController/Create
@@ -132,6 +134,56 @@ namespace WebApp.Controllers
                 return View("Error", e);
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        private SimpleNoteVM decryptText(DecryptVM v)
+        {
+            var arr = v.Text.Split('$');
+            var IV = Convert.FromBase64String(arr[0]);
+            var encrypted = Convert.FromBase64String(arr[1]);
+
+            string plaintext = null;
+
+            // Create an Aes object
+            // with the specified key and IV.
+            using (Aes aesAlg = Aes.Create())
+            {
+                string keyString = v.Key;
+                byte[] keyBytes = new byte[keyString.Length];
+
+                for (int i = 0; i < keyString.Length; i++)
+                {
+                    keyBytes[i] = (byte)keyString[i];
+                }
+
+                HashAlgorithm algorithm = new SHA256Managed();
+                aesAlg.Key = algorithm.ComputeHash(keyBytes);
+                aesAlg.IV = IV;
+
+                // Create a decryptor to perform the stream transform.
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for decryption.
+                using (MemoryStream msDecrypt = new MemoryStream(encrypted))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+
+                            // Read the decrypted bytes from the decrypting stream
+                            // and place them in a string.
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
+
+            return new SimpleNoteVM
+            {
+                Id = v.Id,
+                Text = plaintext
+            };
         }
 
         private NoteVM encryptText(NoteVM n)
