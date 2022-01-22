@@ -93,9 +93,22 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Decrypt(DecryptVM v)
         {
-            SimpleNoteVM decryptedNote = decryptText(v);
-
-            return View("Details", decryptedNote);
+            try
+            {
+                SimpleNoteVM decryptedNote = decryptText(v);
+                string sessionId = Request.Cookies["sessionid"];
+                ViewBag.SessionId = sessionId;
+                return View("Details", decryptedNote);
+            }
+            catch (CryptographicException)
+            {
+                string sessionId = Request.Cookies["sessionid"];
+                ViewBag.SessionId = sessionId;
+                return View("Error",
+                new ErrorViewModel {
+                    RequestId = "Decryption failed. That probably means that the key is invalid."
+                });
+            }
         }
 
         // GET: NotesController/Create
@@ -131,8 +144,12 @@ namespace WebApp.Controllers
             }
             catch (Exception e)
             {
+                string sId = Request.Cookies["sessionid"];
+                ViewBag.SessionId = sId;
                 return View("Error", e);
             }
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return RedirectToAction(nameof(Index));
         }
 
