@@ -70,6 +70,32 @@ namespace WebApp.Controllers
             return View(note);
         }
 
+        public async Task<ActionResult> Decrypt(int uid, int id)
+        {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
+
+            DecryptVM note;
+
+            using (var response = await new HttpClient().GetAsync($"{getEndpointUrl(uid)}/{id}"))
+            {
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                note = JsonConvert.DeserializeObject<DecryptVM>(apiResponse);
+            }
+
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
+            return View(note);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Decrypt(DecryptVM v)
+        {
+            throw new NotImplementedException();
+        }
+
         // GET: NotesController/Create
         public async Task<ActionResult> Create(int uid)
         {
