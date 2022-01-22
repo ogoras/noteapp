@@ -11,6 +11,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.7.0" />
+    <PackageReference Include="Westwind.Web.Markdown" Version="0.2.15" />
   </ItemGroup>
 
 </Project>
