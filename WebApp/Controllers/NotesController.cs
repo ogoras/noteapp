@@ -312,6 +312,7 @@ namespace WebApp.Controllers
         }
 
         // GET: NotesController/Delete/5
+        [HttpGet("{id}")]
         public async Task<ActionResult> Delete(int uid, int id)
         {
             if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
@@ -334,22 +335,27 @@ namespace WebApp.Controllers
         }
 
         // POST: NotesController/Delete/5
-        [HttpPost]
+        [HttpPost("{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int uid, int id, IFormCollection collection)
+        [ActionName("Delete")]
+        public async Task<ActionResult> DeletePost(int uid, int id)
         {
             if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
                 return RedirectToAction("Index", "Home");
             try
             {
-                return RedirectToAction(nameof(Index));
+                using (var httpClient = new HttpClient())
+                {
+                    await httpClient.DeleteAsync($"{getEndpointUrl(uid)}/{id}");
+                }
             }
-            catch
+            catch (Exception e)
             {
                 string sessionId = Request.Cookies["sessionid"];
                 ViewBag.SessionId = sessionId;
-                return View();
+                return View("Error", e);
             }
+            return RedirectToAction(nameof(Index));
         }
 
         [Route("/[controller]/{action=Public}")]
