@@ -98,7 +98,7 @@ namespace WebApp.Controllers
                 SimpleNoteVM decryptedNote = decryptText(v);
                 string sessionId = Request.Cookies["sessionid"];
                 ViewBag.SessionId = sessionId;
-                return View("Details", decryptedNote);
+                return View("DetailsNoEdit", decryptedNote);
             }
             catch (CryptographicException)
             {
