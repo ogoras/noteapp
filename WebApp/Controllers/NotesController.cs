@@ -316,9 +316,21 @@ namespace WebApp.Controllers
         {
             if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
                 return RedirectToAction("Index", "Home");
+
+            NoteDeleteVM n;
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync($"{getEndpointUrl(uid)}/{id}"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    n = JsonConvert.DeserializeObject<NoteDeleteVM>(apiResponse);
+                }
+            }
+
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
-            return View();
+            return View(n);
         }
 
         // POST: NotesController/Delete/5
