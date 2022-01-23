@@ -240,5 +240,16 @@ namespace WebApp.Controllers
             Response.Cookies.Delete("sessionid");
             return RedirectToAction("Index", "Home");
         }
+
+        [Route("/[controller]/{uid}/{action}")]
+        public async Task<IActionResult> ChangePassword(int uid)
+        {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
+
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
+            return View(new ChangePasswordVM(uid));
+        }
     }
 }
