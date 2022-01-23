@@ -149,7 +149,13 @@ namespace Infrastructure.Services
                 throw new NullReferenceException();
             var arr = u.Password.Split('$');
             var hash = calculateHash(login.Password, Convert.FromBase64String(arr[0]));
-            return compareHashes(hash, Convert.FromBase64String(arr[1])) ? generateSession(u) : null;
+            if (compareHashes(hash, Convert.FromBase64String(arr[1])))
+                return generateSession(u);
+            else
+            {
+                await Task.Delay(3000);
+                return null;
+            }
         }
 
         private string generateSession(User u)
