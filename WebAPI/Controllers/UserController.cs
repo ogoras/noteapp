@@ -111,6 +111,11 @@ namespace WebAPI.Controllers
             {
                 return NotFound("User does not exist");
             }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Sorry, your logins are temporarily locked out. This happens when you enter a wrong password too many times." +
+                    " The lockout should automatically subside within 3 minutes.");
+            }
         }
 
         [HttpGet("bysession/{id}")]

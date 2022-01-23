@@ -4,14 +4,16 @@ using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220123142709_login_lockout")]
+    partial class login_lockout
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,10 +170,7 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("LastLoginId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("LockoutTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("LoginAttemptsSinceLockout")
+                    b.Property<int>("LoginAttemptsSinceLockout")
                         .HasColumnType("int");
 
                     b.Property<string>("Password")

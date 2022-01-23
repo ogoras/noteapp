@@ -19,6 +19,8 @@ namespace Core.Domain
         public Profile? Profile { get; set; }
         public int? ProfileId { get; set; }
         public List<Session> Sessions { get; set; }
+        public int? LoginAttemptsSinceLockout { get; set; }
+        public DateTime? LockoutTime { get; set; }
 
         public void updateValues(User u)
         {
@@ -30,6 +32,8 @@ namespace Core.Domain
             UserLogins = u.UserLogins ?? UserLogins;
             Profile = u.Profile ?? Profile;
             Sessions = u.Sessions ?? Sessions;
+            LoginAttemptsSinceLockout = u.LoginAttemptsSinceLockout ?? LoginAttemptsSinceLockout;
+            LockoutTime = u.LockoutTime;
         }
     }
 }

@@ -147,15 +147,36 @@ namespace Infrastructure.Services
             User? u = await _userRepository.ReadAsync(login.Username);
             if (u == null)
                 throw new NullReferenceException();
+
+            if (u.LockoutTime?.AddMinutes(3).CompareTo(DateTime.Now) > 0)
+                throw new UnauthorizedAccessException();
+            else if (u.LockoutTime != null)
+            {
+                u.LockoutTime = null;
+                await _userRepository.UpdateAsync(u);
+            }
+
             var arr = u.Password.Split('$');
             var hash = calculateHash(login.Password, Convert.FromBase64String(arr[0]));
             if (compareHashes(hash, Convert.FromBase64String(arr[1])))
-                return generateSession(u);
-            else
             {
-                await Task.Delay(3000);
-                return null;
+                u.LoginAttemptsSinceLockout = 0;
+                await _userRepository.UpdateAsync(u);
+                return generateSession(u);
             }
+
+            if (u.LoginAttemptsSinceLockout == 10)
+            {
+                u.LoginAttemptsSinceLockout = 0;
+                u.LockoutTime = DateTime.Now;
+                await _userRepository.UpdateAsync(u);
+                throw new UnauthorizedAccessException();
+            }
+
+            u.LoginAttemptsSinceLockout = u.LoginAttemptsSinceLockout == null ? 1 : u.LoginAttemptsSinceLockout + 1;
+            await _userRepository.UpdateAsync(u);
+            await Task.Delay(3000);
+            return null;
         }
 
         private string generateSession(User u)
