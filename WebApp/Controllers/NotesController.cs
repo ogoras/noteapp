@@ -70,6 +70,24 @@ namespace WebApp.Controllers
             return View(note);
         }
 
+        [Route("/[controller]/{action}/{id}")]
+        public async Task<ActionResult> Details(int id)
+        {
+            SimpleNoteVM note;
+
+            using (var response = await new HttpClient().GetAsync($"{Configuration["RestApiUrl"]}notes/{id}"))
+            {
+                if (!response.IsSuccessStatusCode)
+                    return RedirectToAction("Index", "Home");
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                note = JsonConvert.DeserializeObject<SimpleNoteVM>(apiResponse);
+            }
+
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
+            return View("DetailsNoEdit", note);
+        }
+
         public async Task<ActionResult> Decrypt(int uid, int id)
         {
             if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
@@ -322,7 +340,7 @@ namespace WebApp.Controllers
             }
         }
 
-        [Route("/[controller]/{action}")]
+        [Route("/[controller]/{action=Public}")]
         public async Task<ActionResult> Public()
         {
             List<PublicNoteVM> notesList;

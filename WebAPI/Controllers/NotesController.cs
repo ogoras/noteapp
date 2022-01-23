@@ -99,6 +99,20 @@ namespace WebAPI.Controllers
             return Json(notes);
         }
 
+        [HttpGet("/[controller]/{id}")]
+        public async Task<IActionResult> GetPublic(int id)
+        {
+            try
+            {
+                NoteDTOwithID notes = await _noteService.ReadPublic(id);
+                return Json(notes);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("The note with specified ID is not public");
+            }
+        }
+
         [HttpGet("encrypted")]
         public async Task<IActionResult> GetEncrypted(int uid)
         {

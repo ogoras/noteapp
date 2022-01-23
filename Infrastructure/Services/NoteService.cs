@@ -71,6 +71,16 @@ namespace Infrastructure.Services
             return notes.Select(x => new NoteDTOwithID(x));
         }
 
+        public async Task<NoteDTOwithID> ReadPublic(int id)
+        {
+            var note = await _noteRepository.ReadAsync(id);
+
+            if (note.SharedPublically == null || !(bool)note.SharedPublically)
+                throw new UnauthorizedAccessException();
+
+            return new NoteDTOwithID(note);
+        }
+
         public async Task Update(int uid, int id, NoteDTO n)
         {
             Note? original = await _noteRepository.ReadAsync(id);
