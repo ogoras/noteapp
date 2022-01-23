@@ -256,5 +256,25 @@ namespace Infrastructure.Services
             User? u = await _userRepository.ReadAsync(username);
             return u?.Role;
         }
+
+        public async Task UpdatePassword(ChangePasswordDTO cp)
+        {
+            User? u = await _userRepository.ReadAsync(cp.Uid);
+
+            if (u == null)
+                throw new NullReferenceException();
+
+            var arr = u.Password.Split('$');
+            var hash = calculateHash(cp.CurrentPassword, Convert.FromBase64String(arr[0]));
+            if (compareHashes(hash, Convert.FromBase64String(arr[1])))
+            {
+                u.Password = generatePasswordHash(cp.NewPassword);
+                await _userRepository.UpdateAsync(u);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
     }
 }

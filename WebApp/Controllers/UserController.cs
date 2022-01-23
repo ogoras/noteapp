@@ -186,6 +186,9 @@ namespace WebApp.Controllers
             {
                 return View("Error", e);
             }
+
+            string sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
             return RedirectToAction("Index", "Home");
         }
 
@@ -249,7 +252,51 @@ namespace WebApp.Controllers
 
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
-            return View(new ChangePasswordVM(uid));
+            return View(new ChangePasswordVM());
+        }
+
+        [HttpPost("/[controller]/{uid}/{action}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(int uid, ChangePasswordVM cp)
+        {
+            if (uid != await _sessionService.UidLoggedIn(Request.Cookies["sessionid"]))
+                return RedirectToAction("Index", "Home");
+
+            string sessionId;
+
+            if (!ModelState.IsValid)
+            {
+                sessionId = Request.Cookies["sessionid"];
+                ViewBag.SessionId = sessionId;
+                return View(cp);
+            }
+                
+
+            try
+            {
+                using (var HttpClient = new HttpClient())
+                {
+                    string registerJson = System.Text.Json.JsonSerializer.Serialize(cp);
+                    var content = new StringContent(registerJson, Encoding.UTF8, "application/json");
+
+                    var response = await HttpClient.PutAsync($"{_endpointUrl}/{uid}/changepassword", content);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
+                        sessionId = Request.Cookies["sessionid"];
+                        ViewBag.SessionId = sessionId;
+                        return View(cp);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return View("Error", e);
+            }
+
+            sessionId = Request.Cookies["sessionid"];
+            ViewBag.SessionId = sessionId;
+            return RedirectToAction("Index", "Home");
         }
     }
 }

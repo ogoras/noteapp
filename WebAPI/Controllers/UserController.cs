@@ -148,5 +148,24 @@ namespace WebAPI.Controllers
                 return NotFound();
             return Json(role);
         }
+
+        [HttpPut("{uid}/changepassword")]
+        public async Task<IActionResult> ChangePassword(int uid, [FromBody] ChangePasswordDTO cp)
+        {
+            cp.Uid = uid;
+            try
+            {
+                await _userService.UpdatePassword(cp);
+                return Ok();
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Wrong current password!");
+            }
+        }
     }
 }

@@ -18,5 +18,6 @@ namespace Infrastructure.Services
         Task EndSession(Guid id);
         Task ExtendSession(Guid id);
         Task<string?> GetRole(string username);
+        Task UpdatePassword(ChangePasswordDTO cp);
     }
 }
