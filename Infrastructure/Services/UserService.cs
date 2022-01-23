@@ -218,7 +218,20 @@ namespace Infrastructure.Services
         public async Task<string?> UsernameFromSession(Guid sessionid)
         {
             Session? s = await _sessionRepository.ReadAsync(sessionid);
-            return s == null ? null : s.User.Username;
+            if (s?.LastActivity.AddHours(1).CompareTo(DateTime.Now) < 0)    //TODO : Hours
+            {
+                await _sessionRepository.DeleteAsync(s);
+                return null;
+            }
+            else if (s == null)
+            {
+                return null;
+            }
+            else
+            {
+                await ExtendSession(s.Id);
+                return s.User.Username;
+            }
         }
 
         public async Task EndSession(Guid id)
@@ -227,6 +240,15 @@ namespace Infrastructure.Services
             if (s == null)
                 throw new NullReferenceException();
             await _sessionRepository.DeleteAsync(s);
+        }
+
+        public async Task ExtendSession(Guid id)
+        {
+            Session? s = await _sessionRepository.ReadAsync(id);
+            if (s == null)
+                throw new NullReferenceException();
+            s.LastActivity = DateTime.Now;
+            await _sessionRepository.UpdateAsync(s);
         }
     }
 }

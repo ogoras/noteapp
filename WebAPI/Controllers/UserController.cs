@@ -121,6 +121,7 @@ namespace WebAPI.Controllers
         [HttpGet("bysession/{id}")]
         public async Task<IActionResult> GetBySession(Guid id)
         {
+
             string? username = await _userService.UsernameFromSession(id);
             return Json(username);
         }

@@ -16,5 +16,6 @@ namespace Infrastructure.Services
         Task<string?> Login(LoginDTO login);
         Task<string?> UsernameFromSession(Guid sessionid);
         Task EndSession(Guid id);
+        Task ExtendSession(Guid id);
     }
 }

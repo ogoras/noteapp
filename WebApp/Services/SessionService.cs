@@ -32,7 +32,7 @@ namespace WebApp.Services
             using (var response = await new HttpClient().GetAsync(_endpointUrl + $"/bysession/{sessionId}"))
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                if (apiResponse == null)
+                if (apiResponse == null || apiResponse == "null")
                     return false;
             }
 
@@ -63,7 +63,7 @@ namespace WebApp.Services
             using (var response = await new HttpClient().GetAsync(_endpointUrl + $"/bysession/{sessionId}"))
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                username = JsonConvert.DeserializeObject<string>(apiResponse);
+                username = JsonConvert.DeserializeObject<string?>(apiResponse);
             }
 
             return username;

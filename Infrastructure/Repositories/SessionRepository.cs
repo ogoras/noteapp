@@ -41,9 +41,9 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(Session s)
+        public async Task UpdateAsync(Session s)
         {
-            throw new NotImplementedException();
+            await base.UpdateAsync(s, x => x.Id == s.Id);
         }
     }
 }
