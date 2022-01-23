@@ -75,6 +75,11 @@ namespace WebApp.Services
 
             using (var response = await new HttpClient().GetAsync(_endpointUrl + $"/role/{username}"))
             {
+                if (!response.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
                 string apiResponse = await response.Content.ReadAsStringAsync();
                 role = JsonConvert.DeserializeObject<string?>(apiResponse) == "null" ? null : JsonConvert.DeserializeObject<string?>(apiResponse);
             }

@@ -29,6 +29,9 @@ namespace WebApp.Controllers
         // GET: UserController
         public async Task<ActionResult> Index()
         {
+            if (await _sessionService.Role(await _sessionService.UsernameLoggedIn(Request.Cookies["sessionid"])) != "admin")
+                return RedirectToAction("Index", "Home");
+
             List<UserVM> userList;
 
             using (var response = await new HttpClient().GetAsync(_endpointUrl))
@@ -44,16 +47,20 @@ namespace WebApp.Controllers
 
         // GET: UserController/Details/5
         [Route("/[controller]/{id}")]
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
+            if (await _sessionService.Role(await _sessionService.UsernameLoggedIn(Request.Cookies["sessionid"])) != "admin")
+                return RedirectToAction("Index", "Home");
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
             return View();
         }
 
         // GET: UserController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            if (await _sessionService.Role(await _sessionService.UsernameLoggedIn(Request.Cookies["sessionid"])) != "admin")
+                return RedirectToAction("Index", "Home");
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
             return View();
@@ -64,6 +71,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(UserPost u)
         {
+            if (await _sessionService.Role(await _sessionService.UsernameLoggedIn(Request.Cookies["sessionid"])) != "admin")
+                return RedirectToAction("Index", "Home");
+
             try
             {
                 using (var HttpClient = new HttpClient())
@@ -82,8 +92,11 @@ namespace WebApp.Controllers
         }
 
         // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
+            if (await _sessionService.Role(await _sessionService.UsernameLoggedIn(Request.Cookies["sessionid"])) != "admin")
+                return RedirectToAction("Index", "Home");
+
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
             return View();
@@ -92,8 +105,11 @@ namespace WebApp.Controllers
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
+            if (await _sessionService.Role(await _sessionService.UsernameLoggedIn(Request.Cookies["sessionid"])) != "admin")
+                return RedirectToAction("Index", "Home");
+
             try
             {
                 return RedirectToAction(nameof(Index));
@@ -107,8 +123,11 @@ namespace WebApp.Controllers
         }
 
         // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            if (await _sessionService.Role(await _sessionService.UsernameLoggedIn(Request.Cookies["sessionid"])) != "admin")
+                return RedirectToAction("Index", "Home");
+
             string sessionId = Request.Cookies["sessionid"];
             ViewBag.SessionId = sessionId;
             return View();
@@ -117,8 +136,11 @@ namespace WebApp.Controllers
         // POST: UserController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
+            if (await _sessionService.Role(await _sessionService.UsernameLoggedIn(Request.Cookies["sessionid"])) != "admin")
+                return RedirectToAction("Index", "Home");
+
             try
             {
                 return RedirectToAction(nameof(Index));
