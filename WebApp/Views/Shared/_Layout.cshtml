@@ -36,6 +36,13 @@
                             }
                             else
                             {
+                                if (await SessionService.Role(await SessionService.UsernameLoggedIn(ViewBag.SessionId)) == "admin")
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                                    </li>
+                                }
+
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Notes" asp-action="Index" asp-route-uid="@await SessionService.UidLoggedIn(ViewBag.SessionId)">Your notes</a>
                                 </li>

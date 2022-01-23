@@ -69,6 +69,19 @@ namespace WebApp.Services
             return username;
         }
 
+        public async Task<string?> Role(string username)
+        {
+            string? role;
+
+            using (var response = await new HttpClient().GetAsync(_endpointUrl + $"/role/{username}"))
+            {
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                role = JsonConvert.DeserializeObject<string?>(apiResponse) == "null" ? null : JsonConvert.DeserializeObject<string?>(apiResponse);
+            }
+
+            return role;
+        }
+
         private class IdObject
         {
             public int Id { get; set; }

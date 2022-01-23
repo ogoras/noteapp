@@ -21,6 +21,7 @@ namespace Core.Domain
         public List<Session> Sessions { get; set; }
         public int? LoginAttemptsSinceLockout { get; set; }
         public DateTime? LockoutTime { get; set; }
+        public string Role { get; set; } = "user";
 
         public void updateValues(User u)
         {

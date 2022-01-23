@@ -17,5 +17,6 @@ namespace Infrastructure.Services
         Task<string?> UsernameFromSession(Guid sessionid);
         Task EndSession(Guid id);
         Task ExtendSession(Guid id);
+        Task<string?> GetRole(string username);
     }
 }

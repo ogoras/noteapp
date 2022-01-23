@@ -250,5 +250,11 @@ namespace Infrastructure.Services
             s.LastActivity = DateTime.Now;
             await _sessionRepository.UpdateAsync(s);
         }
+
+        public async Task<string?> GetRole(string username)
+        {
+            User? u = await _userRepository.ReadAsync(username);
+            return u?.Role;
+        }
     }
 }

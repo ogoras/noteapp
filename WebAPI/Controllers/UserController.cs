@@ -139,5 +139,14 @@ namespace WebAPI.Controllers
             }
             return Ok();
         }
+
+        [HttpGet("role/{username}")]
+        public async Task<IActionResult> GetRole(string username)
+        {
+            string? role = await _userService.GetRole(username);
+            if (role == null)
+                return NotFound();
+            return Json(role);
+        }
     }
 }
