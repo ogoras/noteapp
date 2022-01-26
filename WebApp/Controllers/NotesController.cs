@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,7 +41,10 @@ namespace WebApp.Controllers
 
             List<NoteWithIDVM> notesList;
 
-            using (var response = await new HttpClient().GetAsync(getEndpointUrl(uid)))
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["jwt"]);
+
+            using (var response = await httpClient.GetAsync(getEndpointUrl(uid)))
             {
                 if (!response.IsSuccessStatusCode)
                     notesList = new List<NoteWithIDVM>();
@@ -64,7 +68,9 @@ namespace WebApp.Controllers
 
             SimpleNoteVM note;
 
-            using (var response = await new HttpClient().GetAsync($"{getEndpointUrl(uid)}/{id}"))
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["jwt"]);
+            using (var response = await httpClient.GetAsync($"{getEndpointUrl(uid)}/{id}"))
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
                 note = JsonConvert.DeserializeObject<SimpleNoteVM>(apiResponse);
@@ -80,7 +86,10 @@ namespace WebApp.Controllers
         {
             SimpleNoteVM note;
 
-            using (var response = await new HttpClient().GetAsync($"{Configuration["RestApiUrl"]}notes/{id}"))
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["jwt"]);
+
+            using (var response = await httpClient.GetAsync($"{Configuration["RestApiUrl"]}notes/{id}"))
             {
                 if (!response.IsSuccessStatusCode)
                     return RedirectToAction("Index", "Home");
@@ -100,7 +109,9 @@ namespace WebApp.Controllers
 
             DecryptVM note;
 
-            using (var response = await new HttpClient().GetAsync($"{getEndpointUrl(uid)}/{id}"))
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["jwt"]);
+            using (var response = await httpClient.GetAsync($"{getEndpointUrl(uid)}/{id}"))
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
                 note = JsonConvert.DeserializeObject<DecryptVM>(apiResponse);
@@ -157,12 +168,13 @@ namespace WebApp.Controllers
 
             try
             {
-                using (var HttpClient = new HttpClient())
+                using (var httpClient = new HttpClient())
                 {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["jwt"]);
                     string userJson = System.Text.Json.JsonSerializer.Serialize(n);
                     var content = new StringContent(userJson, Encoding.UTF8, "application/json");
 
-                    await HttpClient.PostAsync(getEndpointUrl(uid), content);
+                    await httpClient.PostAsync(getEndpointUrl(uid), content);
                 }
             }
             catch (Exception e)
@@ -276,7 +288,9 @@ namespace WebApp.Controllers
 
             try
             {
-                using (var response = await new HttpClient().GetAsync($"{getEndpointUrl(uid)}/{id}"))
+                var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["jwt"]);
+                using (var response = await httpClient.GetAsync($"{getEndpointUrl(uid)}/{id}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     note = JsonConvert.DeserializeObject<NoteWithIDVM>(apiResponse);
@@ -303,6 +317,7 @@ namespace WebApp.Controllers
             {
                 using (var httpClient = new HttpClient())
                 {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["jwt"]);
                     string noteString = System.Text.Json.JsonSerializer.Serialize(n);
                     var content = new StringContent(noteString, Encoding.UTF8, "application/json");
 
@@ -327,6 +342,7 @@ namespace WebApp.Controllers
 
             using (var httpClient = new HttpClient())
             {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["jwt"]);
                 using (var response = await httpClient.GetAsync($"{getEndpointUrl(uid)}/{id}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
@@ -351,6 +367,7 @@ namespace WebApp.Controllers
             {
                 using (var httpClient = new HttpClient())
                 {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["jwt"]);
                     await httpClient.DeleteAsync($"{getEndpointUrl(uid)}/{id}");
                 }
             }
@@ -386,7 +403,9 @@ namespace WebApp.Controllers
 
             List<SimpleNoteVM> notesList;
 
-            using (var response = await new HttpClient().GetAsync($"{getEndpointUrl(uid)}/encrypted"))
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Request.Cookies["jwt"]);
+            using (var response = await httpClient.GetAsync($"{getEndpointUrl(uid)}/encrypted"))
             {
                 string apiResponse = await response.Content.ReadAsStringAsync();
                 notesList = JsonConvert.DeserializeObject<List<SimpleNoteVM>>(apiResponse);
