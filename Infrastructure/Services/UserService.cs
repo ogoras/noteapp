@@ -141,10 +141,10 @@ namespace Infrastructure.Services
             await _userRepository.DeleteAsync(u);
         }
 
-        public async Task<string?> Login(LoginDTO login)
+        public async Task<TokenBundle?> Login(LoginDTO login)
         {
             if (login.Username == null || login.Password == null)
-                throw new NullReferenceException();
+                throw new ArgumentNullException("No username or password provided");
             User? u = await _userRepository.ReadAsync(login.Username);
             if (u == null)
                 throw new NullReferenceException();
@@ -163,7 +163,10 @@ namespace Infrastructure.Services
             {
                 u.LoginAttemptsSinceLockout = 0;
                 await _userRepository.UpdateAsync(u);
-                return generateSession(u);
+                return new TokenBundle {
+                    SessionId = generateSession(u),
+                    JsonWebToken = generateJWT(u)
+                };
             }
 
             if (u.LoginAttemptsSinceLockout == 10)

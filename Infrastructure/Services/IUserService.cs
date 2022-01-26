@@ -13,7 +13,7 @@ namespace Infrastructure.Services
         Task<UserDTOwithID?> Read(string username);
         Task Update(int id, UserDTO user);
         Task Delete(int id);
-        Task<string?> Login(LoginDTO login);
+        Task<TokenBundle?> Login(LoginDTO login);
         Task<string?> UsernameFromSession(Guid sessionid);
         Task EndSession(Guid id);
         Task ExtendSession(Guid id);

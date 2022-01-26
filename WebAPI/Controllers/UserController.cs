@@ -102,10 +102,14 @@ namespace WebAPI.Controllers
         {
             try
             {
-                string? token = await _userService.Login(login);
+                TokenBundle? token = await _userService.Login(login);
                 if (token == null)
                     return Unauthorized("Wrong password");
-                return Ok(token);
+                return Json(token);
+            }
+            catch (ArgumentNullException e)
+            {
+                return BadRequest(e.Message);
             }
             catch (NullReferenceException)
             {
