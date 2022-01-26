@@ -221,12 +221,18 @@ namespace WebApp.Controllers
                     }
                     TokenBundle bundle = JsonConvert.DeserializeObject<TokenBundle>(await response.Content.ReadAsStringAsync());
                     string sessionId = bundle.SessionId;
+                    string jwt = bundle.JsonWebToken;
                     Response.Cookies.Append("sessionid", sessionId, new CookieOptions()
                     {
                         HttpOnly = true,
                         Secure = true
                     });
                     ViewBag.SessionId = sessionId;
+                    Response.Cookies.Append("jwt", jwt, new CookieOptions()
+                    {
+                        HttpOnly = true,
+                        Secure = true
+                    });
                 }
             }
             catch (Exception e)
@@ -242,6 +248,7 @@ namespace WebApp.Controllers
             string sessionId = Request.Cookies["sessionid"];
             await _sessionService.EndSession(sessionId);
             Response.Cookies.Delete("sessionid");
+            Response.Cookies.Delete("jwt");
             return RedirectToAction("Index", "Home");
         }
 
