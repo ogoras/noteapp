@@ -42,8 +42,13 @@ namespace WebApp.Controllers
 
             using (var response = await new HttpClient().GetAsync(getEndpointUrl(uid)))
             {
-                string apiResponse = await response.Content.ReadAsStringAsync();
-                notesList = JsonConvert.DeserializeObject<List<NoteWithIDVM>>(apiResponse);
+                if (!response.IsSuccessStatusCode)
+                    notesList = new List<NoteWithIDVM>();
+                else
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    notesList = JsonConvert.DeserializeObject<List<NoteWithIDVM>>(apiResponse);
+                }
             }
 
             string sessionId = Request.Cookies["sessionid"];

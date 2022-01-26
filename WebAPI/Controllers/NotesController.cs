@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Infrastructure.DTO;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -21,6 +22,7 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/<NotesController>
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Get(int uid)
         {
@@ -28,6 +30,7 @@ namespace WebAPI.Controllers
             return Json(notes);
         }
 
+        [Authorize]
         // GET api/<NotesController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int uid, int id)
@@ -36,6 +39,7 @@ namespace WebAPI.Controllers
             return Json(note);
         }
 
+        [Authorize]
         // POST api/<NotesController>
         [HttpPost]
         public async Task<IActionResult> Post(int uid, [FromBody] NoteDTO note)
@@ -54,6 +58,7 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
+        [Authorize]
         // PUT api/<NotesController>/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int uid, int id, [FromBody] NoteDTO note)
@@ -72,6 +77,7 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
+        [Authorize]
         // DELETE api/<NotesController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int uid, int id)
@@ -113,6 +119,7 @@ namespace WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("encrypted")]
         public async Task<IActionResult> GetEncrypted(int uid)
         {
