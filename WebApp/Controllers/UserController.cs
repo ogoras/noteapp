@@ -219,7 +219,8 @@ namespace WebApp.Controllers
                         ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
                         return View(l);
                     }
-                    string sessionId = await response.Content.ReadAsStringAsync();
+                    TokenBundle bundle = JsonConvert.DeserializeObject<TokenBundle>(await response.Content.ReadAsStringAsync());
+                    string sessionId = bundle.SessionId;
                     Response.Cookies.Append("sessionid", sessionId, new CookieOptions()
                     {
                         HttpOnly = true,
