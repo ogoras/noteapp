@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -208,8 +209,9 @@ namespace Infrastructure.Services
             var token = new JwtSecurityToken(
                 issuer: "noteapp",
                 audience: "noteapp",
-                expires: DateTime.Now.AddHours(1),
-                signingCredentials: credentials
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: credentials,
+                claims: new[] {new Claim("username", u.Username)}
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -218,7 +220,7 @@ namespace Infrastructure.Services
         public async Task<string?> UsernameFromSession(Guid sessionid)
         {
             Session? s = await _sessionRepository.ReadAsync(sessionid);
-            if (s?.LastActivity.AddHours(1).CompareTo(DateTime.Now) < 0)    //TODO : Hours
+            if (s?.LastActivity.AddHours(1).CompareTo(DateTime.Now) < 0)
             {
                 await _sessionRepository.DeleteAsync(s);
                 return null;
